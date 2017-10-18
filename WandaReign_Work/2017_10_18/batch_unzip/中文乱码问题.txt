@@ -1,0 +1,2 @@
+https://jingyan.baidu.com/article/ce436649f44d4d3773afd302.html
+保存为ANSI格式即可，再将txt文件重命名为bat，直接执行即可。
