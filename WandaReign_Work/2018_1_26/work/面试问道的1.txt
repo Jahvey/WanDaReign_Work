@@ -1,0 +1,5 @@
+1.dubbo和dubbox
+2.mybatis的${}和#{}的区别
+3.web中的中间件，说说区别和优势
+4.hadoop处理数据一致性的几种解决方案，以及相应的底层实现原理
+5.springMVC和Struts2的实现机制
