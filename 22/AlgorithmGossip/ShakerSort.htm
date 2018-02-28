@@ -1,0 +1,225 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/stdlayout.css" type="text/css">
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/print.css" type="text/css">
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  <meta content="text/html; charset=gb2312" http-equiv="content-type">
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  <title>Shaker 排序法 - 改良的气泡排序</title>
+</head>
+
+
+<body>
+
+
+
+
+
+
+<h3><a href="http://taobao.esmartweb.com/man.htm"># 面试时穿什么着装合适，这里找答案! #</a></h3>
+
+
+
+
+
+
+<h1><a href="AlgorithmGossip.htm">Algorithm Gossip:&nbsp;Shaker 排序法 - 改良的气泡排序</a></h1>
+
+
+
+
+
+
+<h2>说明</h2>
+
+请看看之前介绍过的气泡排序法：<br>
+
+<div style="margin-left: 40px;"><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp; for(i = 0; i &lt; MAX-1 &amp;&amp; flag == 1; i++) { </span><br style="font-weight: bold; font-family: Courier New,Courier,monospace;">
+
+<span style="font-weight: bold; font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; flag = 0; </span><br style="font-weight: bold; font-family: Courier New,Courier,monospace;">
+
+<span style="font-weight: bold; font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for(j = 0; j &lt; MAX-i-1; j++) { </span><br style="font-weight: bold; font-family: Courier New,Courier,monospace;">
+
+<span style="font-weight: bold; font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(number[j+1] &lt; number[j]) { </span><br style="font-weight: bold; font-family: Courier New,Courier,monospace;">
+
+<span style="font-weight: bold; font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SWAP(number[j+1], number[j]); </span><br style="font-weight: bold; font-family: Courier New,Courier,monospace;">
+
+<span style="font-weight: bold; font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; flag = 1; </span><br style="font-weight: bold; font-family: Courier New,Courier,monospace;">
+
+<span style="font-weight: bold; font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } </span><br style="font-weight: bold; font-family: Courier New,Courier,monospace;">
+
+<span style="font-weight: bold; font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } </span><br style="font-weight: bold; font-family: Courier New,Courier,monospace;">
+
+<span style="font-weight: bold; font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp; } </span><br>
+
+</div>
+
+&nbsp;<br>
+
+<br>
+
+事实上这个气泡排序法已经不是单纯的气泡排序了，它使用了旗标与右端左移两个方法来改进排序的效能，而Shaker排序法使用到后面这个观念进一步改良气泡排序法。<br>
+
+<h2>解法</h2>
+
+在上面的气泡排序法中，交换的动作并不会一直进行至阵列的最后一个，而是会进行至MAX-i-1，所以排序的过程中，阵列右方排序好的元素会一直增加，使得左边排序的次数逐渐减少，如我们的例子所示：<br>
+
+<br>
+
+排序前：95 27 90 49 80 58 6 9 18 50<br>
+
+<br>
+
+<ol>
+
+  <li>27 90 49 80 58 6 9 18 50 [95] 95浮出</li>
+
+  <li>27 49 80 58 6 9 18 50 [90 95] 90浮出</li>
+
+  <li>27 49 58 6 9 18 50 [80 90 95] 80浮出</li>
+
+  <li>27 49 6 9 18 50 [58 80 90 95] ......</li>
+
+  <li>27 6 9 18 49 [50 58 80 90 95] ......</li>
+
+  <li>6 9 18 27 [49 50 58 80 90 95] ......</li>
+
+  <li>6 9 18 [27 49 50 58 80 90 95]</li>
+
+</ol>
+
+<br>
+
+方括号括住的部份表示已排序完毕，Shaker排序使用了这个概念，如果让左边的元素也具有这样的性质，让左右两边的元素都能先排序完成，如此未排序的元素会集中在中间，由于左右两边同时排序，中间未排序的部份将会很快的减少。<br>
+
+<br>
+
+方法就在于气泡排序的双向进行，先让气泡排序由左向右进行，再来让气泡排序由右往左进行，如此完成一次排序的动作，而您必须使用left与right两个旗标来记录左右两端已排序的元素位置。<br>
+
+<br>
+
+一个排序的例子如下所示：<br>
+
+<br>
+
+排序前：45 19 77 81 13 28 18 19 77 11<br>
+
+<br>
+
+<div style="margin-left: 40px;">往右排序：19 45 77 13 28 18 19 77 11 [81]<br>
+
+向左排序：[11] 19 45 77 13 28 18 19 77 [81]<br>
+
+<br>
+
+往右排序：[11] 19 45 13 28 18 19 [77 77 81]<br>
+
+向左排序：[11 13] 19 45 18 28 19 [77 77 81]<br>
+
+<br>
+
+往右排序：[11 13] 19 18 28 19 [45 77 77 81]<br>
+
+向左排序：[11 13 18] 19 19 28 [45 77 77 81]<br>
+
+<br>
+
+往右排序：[11 13 18] 19 19 [28 45 77 77 81]<br>
+
+向左排序：[11 13 18 19 19] [28 45 77 77 81]<br>
+
+</div>
+
+<br>
+
+如上所示，括号中表示左右两边已排序完成的部份，当left &gt; right时，则排序完成。 <br>
+
+
+
+<br>
+
+<h2> 实作</h2>
+
+
+<ul>
+
+  <li> C
+  </li>
+
+</ul>
+
+
+<pre>#include &lt;stdio.h&gt; <br>#include &lt;stdlib.h&gt; <br>#include &lt;time.h&gt; <br>#define MAX 10 <br>#define SWAP(x,y) {int t; t = x; x = y; y = t;} <br><br>void shakersort(int[]); <br><br>int main(void) { <br>    int number[MAX] = {0}; <br>    int i;  <br><br>    srand(time(NULL)); <br><br>    printf("排序前："); <br>    for(i = 0; i &lt; MAX; i++) { <br>        number[i] = rand() % 100; <br>        printf("%d ", number[i]); <br>    } <br><br>    shakersort(number); <br><br>    printf("\n"); <br><br>    return 0; <br>} <br><br>void shakersort(int number[]) { <br>    int i, left = 0, right = MAX - 1, shift = 0; <br><br>    while(left &lt; right) { <br>        // 向右进行气泡排序 <br>        for(i = left; i &lt; right; i++) { <br>            if(number[i] &gt; number[i+1]) { <br>                SWAP(number[i], number[i+1]); <br>                shift = i; <br>            } <br>        } <br>        right = shift; <br><br>        printf("\n往右排序："); <br>        for(i = 0; i &lt; MAX; i++) <br>            printf("%d ", number[i]); <br><br>        // 向左进行气泡排序 <br>        for(i = right; i &gt; left; i--) { <br>            if(number[i] &lt; number[i-1]) { <br>                SWAP(number[i], number[i-1]); <br>                shift = i; <br>            } <br>        } <br>        left = shift; <br><br>        printf("\n向左排序："); <br>        for(i = 0; i &lt; MAX; i++) <br>            printf("%d ", number[i]); <br>    } <br>} <br></pre>
+
+
+<br>
+
+
+<ul>
+
+  <li> Java
+  </li>
+
+</ul>
+
+
+<pre>public class ShakerSort {<br>    public static void sort(int[] number) {<br>        int i, left = 0, <br>               right = number.length - 1, <br>               shift = 0; <br><br>        while(left &lt; right) { <br>            // 向右进行气泡排序 <br>            for(i = left; i &lt; right; i++) { <br>                if(number[i] &gt; number[i+1]) { <br>                    swap(number, i, i+1); <br>                    shift = i; <br>                } <br>            } <br>            right = shift; <br><br>            // 向左进行气泡排序 <br>            for(i = right; i &gt; left; i--) { <br>                if(number[i] &lt; number[i-1]) { <br>                    swap(number, i ,i-1); <br>                    shift = i; <br>                } <br>            } <br>            left = shift; <br>        } <br>    }<br><br>    private static void swap(int[] number, int i, int j) {<br>        int t; <br>        t = number[i]; <br>        number[i] = number[j]; <br>        number[j] = t;<br>    }<br>} </pre>
+
+<br>
+
+<br>
+
+
+
+
+
+
+</body>
+</html>

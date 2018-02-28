@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="css/stdlayout.css" type="text/css">
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="css/print.css" type="text/css">
+
+
+
+  
+  
+  
+  <meta content="text/html; charset=gb2312" http-equiv="content-type">
+
+
+
+  
+  
+  
+  <title>超长整数运算（大数运算）</title>
+</head>
+
+
+<body>
+
+
+
+<h3><a href="http://taobao.esmartweb.com/man.htm"># 面试时穿什么着装合适，这里找答案! #</a></h3>
+
+
+
+<h1><a href="AlgorithmGossip.htm">Algorithm Gossip: 超长整数运算（大数运算）</a></h1>
+
+
+
+<h2>说明</h2>
+基于记忆体的有效运用，程式语言中规定了各种不同的资料型态，也因此变数所可以表达的最大整数受到限制，例如123456789123456789这样的
+整数就不可能储存在long变数中（例如C/C++等），我们称这为long数，这边翻为超长整数（避免与资料型态的长整数翻译混淆），或俗称大数运算。<br>
+<h2>解法</h2>
+一个变数无法表示超长整数，则就使用多个变数，当然这使用阵列最为方便，假设程式语言的最大资料型态可以储存至65535的数好了，为了计算方便及符合使用十进位制的习惯，让每一个阵列元素可以储存四个位数，也就是0到9999的数，例如： <br>
+<div style="text-align: center;"><img style="width: 445px; height: 356px;" alt="大数运算" title="大数运算" src="images/bigNumber-1.jpg"><br>
+<br>
+<div style="text-align: left;">很多人问到如何计算像50!这样的问题，解法就是使用程式中的乘法函式，至于要算到多大，就看需求了。<br>
+<br>
+如果您使用的是Java，那么在java.lang下有BigInteger与BigDecimal可以直接进行大数运算。<br>
+<br>
+由于使用阵列来储存数值，关于数值在运算时的加减乘除等各种运算、位数的进位或借位就必须自行定义，加、减、乘都是由低位数开始运算，而除法则是由高位数开始运算，这边直接提供加减乘除运算的函式供作参考，以下的N为阵列长度。 <br>
+<br>
+<h2> 实作</h2>
+
+<ul>
+  <li> C </li>
+</ul>
+
+<pre>void add(int *a, int *b, int *c) { <br>    int i, carry = 0; <br><br>    for(i = N - 1; i &gt;= 0; i--) { <br>        c[i] = a[i] + b[i] + carry; <br>        if(c[i] &lt; 10000) <br>            carry = 0; <br>        else { // 进位 <br>            c[i] = c[i] - 10000; <br>            carry = 1; <br>        } <br>    } <br>} <br><br>void sub(int *a, int *b, int *c) { <br>    int i, borrow = 0; <br><br>    for(i = N - 1; i &gt;= 0; i--) { <br>        c[i] = a[i] - b[i] - borrow; <br>        if(c[i] &gt;= 0) <br>            borrow = 0; <br>        else { // 借位 <br>            c[i] = c[i] + 10000; <br>            borrow = 1; <br>        } <br>    } <br>} <br><br>void mul(int *a, int b, int *c) { // b 为乘数 <br>    int i, tmp, carry = 0; <br><br>    for(i = N - 1; i &gt;=0; i--) { <br>        tmp = a[i] * b + carry; <br>        c[i] = tmp % 10000;    <br>        carry = tmp / 10000; <br>    } <br>} <br><br>void div(int *a, int b, int *c) {  // b 为除数 <br>    int i, tmp, remain = 0; <br><br>    for(i = 0; i &lt; N; i++) { <br>        tmp = a[i] + remain; <br>        c[i] = tmp / b; <br>        remain = (tmp % b) * 10000; <br>    } <br>} <br></pre>
+
+<br>
+
+<ul>
+  <li> Java </li>
+</ul>
+
+<pre>public class BigNumber {<br>    public static int[] add(int[] a, int[] b) { <br>        int carry = 0;<br>        int[] c = new int[a.length];<br><br>        for(int i = a.length - 1; i &gt;= 0; i--) { <br>            c[i] = a[i] + b[i] + carry; <br>            if(c[i] &lt; 10000) <br>                carry = 0; <br>            else { // 进位 <br>                c[i] = c[i] - 10000; <br>                carry = 1; <br>            } <br>        }<br>        <br>        return c;<br>    } <br><br>    public static int[] sub(int[] a, int[] b) { <br>        int borrow = 0; <br>        int[] c = new int[a.length];<br>        <br>        for(int i = a.length - 1; i &gt;= 0; i--) { <br>            c[i] = a[i] - b[i] - borrow; <br>            if(c[i] &gt;= 0) <br>                borrow = 0; <br>            else { // 借位 <br>                c[i] = c[i] + 10000; <br>                borrow = 1; <br>            } <br>        }<br>        <br>        return c;<br>    } <br><br>    public static int[] mul(int[] a, int b) { // b 为乘数 <br>        int carry = 0; <br>        int[] c = new int[a.length];<br>        <br>        for(int i = a.length - 1; i &gt;=0; i--) { <br>            int tmp = a[i] * b + carry; <br>            c[i] = tmp % 10000;    <br>            carry = tmp / 10000; <br>        } <br>        <br>        return c;<br>    } <br><br>    public static int[] div(int[] a, int b) {  // b 为除数 <br>        int remain = 0; <br>        int[] c = new int[a.length];<br><br>        for(int i = 0; i &lt; a.length; i++) { <br>            int tmp = a[i] + remain; <br>            c[i] = tmp / b; <br>            remain = (tmp % b) * 10000; <br>        } <br>        <br>        return c;<br>    }<br>    <br>    public static void main(String[] args) {<br>        int[] a = {1234, 5678, 9910, 1923, 1124};<br>        int[] b = {1234, 5678, 9910, 1923, 1124};<br>        int[] c = BigNumber.add(a, b);<br>        <br>        for(int i = 0; i &lt; c.length; i++) {<br>            System.out.print(c[i]);<br>        }<br>        System.out.println();<br>    }<br>}</pre>
+<br>
+</div>
+</div>
+
+
+
+</body>
+</html>

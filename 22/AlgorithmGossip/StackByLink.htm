@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/stdlayout.css" type="text/css">
+
+
+
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/print.css" type="text/css">
+
+
+
+
+  
+  
+  
+  
+  <meta content="text/html; charset=gb2312" http-equiv="content-type">
+
+
+
+
+  
+  
+  
+  
+  <title>堆叠 - 使用链结实作（C 语言动态记忆体宣告）</title>
+</head>
+
+
+<body>
+
+
+<h3><a href="http://taobao.esmartweb.com/man.htm"># 面试时穿什么着装合适，这里找答案! #</a></h3>
+
+
+
+
+<h1><a href="AlgorithmGossip.htm">Algorithm Gossip:&nbsp;堆叠 - 使用链结实作（C 语言动态记忆体宣告）</a></h1>
+
+
+
+
+<h2>说明</h2>
+使用阵列实作堆叠，会受到阵列大小必须事先宣告好的限制，我们可以使用链结（link）的方式来实作堆叠，以动态记忆体宣告的方式来新增每一个元素。<br>
+<h2>解法</h2>
+链结（link）是由节点组成，每一个节点储存资料之外，还储存下一个节点的位置，如下图所示：<br>
+<div style="text-align: center;"><img style="width: 368px; height: 34px;" alt="Link" title="Link" src="images/stackByLink-1.jpg"></div>
+<br>
+<br>
+对堆叠而言，加入新节点与删除节点的方法如下图所示：<br>
+新增节点：<br>
+<div style="text-align: center;"><img style="width: 391px; height: 116px;" alt="Link" title="Link" src="images/stackByLink-2.jpg"></div>
+<br>
+<br>
+删除节点：<br>
+<div style="text-align: center;"><img style="width: 394px; height: 115px;" alt="Link" title="Link" src="images/stackByLink-3.jpg"></div>
+<br>
+<br>
+链结也可以使用阵列来实作，不过在这边我们以动态记忆体宣告的方式来进行，在C语言中，这是实作链结的基本作法，可以不受阵列大小必须先行宣告的限制，所以使用链结实作堆叠时，就不会有堆叠已满的问题（除了记忆体用尽之外）。<br>
+<br>
+上面的图说只是个示意，在演算的时候，会需要一些暂存变数来协助节点新增与删除时的连结更动，请直接参照以下的程式实作。 <br>
+
+<br>
+<h2> 实作</h2>
+
+<ul>
+  <li> C
+  </li>
+</ul>
+
+<pre>#include &lt;stdio.h&gt; <br>#include &lt;stdlib.h&gt; <br><br>struct node { <br>    int data; <br>    struct node *next; <br>}; <br><br>typedef struct node getnode; <br><br>getnode* creates(void);         // 建立堆叠 <br>int isEmpty(getnode*);           // 堆叠已空 <br>int stacktop(getnode*);   // 传回顶端元素 <br>getnode* add(getnode*, int);   // 新增元素 <br>getnode* delete(getnode*);     // 删除元素 <br>void list(getnode*);      // 显示所有内容 <br><br>int main(void) { <br>    getnode* sTop; <br>    int input, select; <br><br>    sTop = creates(); <br><br>    while(1) { <br>        printf("\n\n请输入选项(-1结束)："); <br>        printf("\n(1)插入值至堆叠"); <br>        printf("\n(2)显示堆叠顶端"); <br>        printf("\n(3)删除顶端值"); <br>        printf("\n(4)显示所有内容"); <br>        printf("\n$c&gt;"); <br>        scanf("%d", &amp;select); <br>        <br>        if(select == -1) <br>            break; <br><br>        switch(select) { <br>            case 1: <br>                printf("\n输入值："); <br>                scanf("%d", &amp;input); <br>                sTop = add(sTop, input); <br>                break; <br>            case 2: <br>                printf("\n顶端值：%d", stacktop(sTop)); <br>                break; <br>            case 3: <br>                sTop = delete(sTop); <br>                break; <br>            case 4: <br>                list(sTop); <br>                break; <br>            default: <br>                printf("\n选项错误！"); <br>        } <br>    } <br><br>    printf("\n"); <br><br>    return 0; <br>} <br><br>getnode* creates() { <br>    return NULL; <br>} <br><br>int isEmpty(getnode* top) { <br>    return (top == NULL); <br>} <br><br>int stacktop(getnode* top) { <br>    return top-&gt;data; <br>} <br><br>getnode* add(getnode* top, int item) { <br>    getnode* newnode; <br><br>    newnode = (getnode*) malloc(sizeof(getnode)); <br><br>    if(newnode == NULL) { <br>        printf("\n记忆体配置失败！"); <br>        exit(1); <br>    } <br><br>    newnode-&gt;data = item; <br>    newnode-&gt;next = top; <br>    top = newnode; <br><br>    return top; <br>} <br><br>getnode* delete(getnode* top) { <br>    getnode* tmpnode; <br><br>    tmpnode = top; <br>    if(tmpnode == NULL) { <br>        printf("\n堆叠已空！"); <br>        return NULL; <br>    } <br><br>    top = top-&gt;next; <br>    free(tmpnode); <br><br>    return top; <br>} <br><br>void list(getnode* top) { <br>    getnode* tmpnode; <br>    tmpnode = top; <br><br>    printf("\n堆叠内容："); <br>    while(tmpnode != NULL) { <br>        printf("%d ", tmpnode-&gt;data); <br>        tmpnode = tmpnode-&gt;next; <br>    } <br>}</pre>
+<br>
+<br>
+
+
+
+
+</body>
+</html>

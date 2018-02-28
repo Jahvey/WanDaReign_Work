@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="css/stdlayout.css" type="text/css">
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="css/print.css" type="text/css">
+
+
+
+  
+  
+  
+  <meta content="text/html; charset=gb2312" http-equiv="content-type">
+
+
+
+  
+  
+  
+  <title>骑士走棋盘</title>
+</head>
+
+
+<body>
+
+
+
+<h3><a href="http://taobao.esmartweb.com/man.htm"># 面试时穿什么着装合适，这里找答案! #</a></h3>
+
+
+<h1><a href="AlgorithmGossip.htm">Algorithm Gossip: 骑士走棋盘</a></h1>
+
+
+
+<h2>&nbsp;说明</h2>
+骑士旅游（Knight tour）在十八世纪初倍受数学家与拼图迷的注意，它什么时候被提出已不可考，骑士的走法为西洋棋的走法，骑士可以由任一个位置出发，它要如何走完[所有的位置？<br>
+<h2>解法</h2>
+骑士的走法，基本上可以使用递回来解决，但是纯綷的递回在维度大时相当没有效率，一个聪明的解法由J.C.
+Warnsdorff在1823年提出，简单的说，先将最难的位置走完，接下来的路就宽广了，骑士所要走的下一步，“为下一步再选择时，所能走的步数最少
+的一步。”，使用这个方法，在不使用递回的情况下，可以有较高的机率找出走法（找不到走法的机会也是有的）。 <br>
+
+
+
+<h2> 演算法</h2>
+
+<pre>FOR(m = 2; m &lt;= 总步数; m++) [<br>    测试下一步可以走的八个方向，记录可停留的格数count。<br><br>    IF(count == 0) [<br>        游历失败<br>    ]<br>    ELSE IF(count == 1) [<br>        下一步只有一个可能<br>    ]<br>    ELSE [<br>        找出下一步的出路最少的格子<br>       如果出路值相同，则选第一个遇到的出路。 <br>    ]<br><br>    走最少出路的格子，记录骑士的新位置。  <br>] <br></pre>
+
+
+<h2> 实作</h2>
+
+<ul>
+  <li> C
+  </li>
+</ul>
+
+<pre>#include &lt;stdio.h&gt; <br><br>int board[8][8] = {0}; <br><br>int main(void) {<br>    int startx, starty;<br>    int i, j;<br><br>    printf("输入起始点：");<br>    scanf("%d %d", &amp;startx, &amp;starty);<br><br>    if(travel(startx, starty)) {<br>        printf("游历完成！\n");<br>    }<br>    else {<br>        printf("游历失败！\n");<br>    }<br><br>    for(i = 0; i &lt; 8; i++) {<br>        for(j = 0; j &lt; 8; j++) {<br>            printf("%2d ", board[i][j]);<br>        }<br>        putchar('\n');<br>    }<br><br>    return 0;<br>} <br><br>int travel(int x, int y) {<br>    // 对应骑士可走的八个方向<br>    int ktmove1[8] = {-2, -1, 1, 2, 2, 1, -1, -2};<br>    int ktmove2[8] = {1, 2, 2, 1, -1, -2, -2, -1};<br><br>    // 测试下一步的出路<br>    int nexti[8] = {0};<br>    int nextj[8] = {0};<br><br>    // 记录出路的个数<br>    int exists[8] = {0};<br><br>    int i, j, k, m, l;<br>    int tmpi, tmpj;<br>    int count, min, tmp;<br><br>    i = x;<br>    j = y;<br><br>    board[i][j] = 1;<br><br>    for(m = 2; m &lt;= 64; m++) {<br>        for(l = 0; l &lt; 8; l++) {<br>            exists[l] = 0;<br>        }<br><br>        l = 0;<br><br>        // 试探八个方向<br>        for(k = 0; k &lt; 8; k++) {<br>            tmpi = i + ktmove1[k];<br>            tmpj = j + ktmove2[k];<br><br>            // 如果是边界了，不可走<br>            if(tmpi &lt; 0 || tmpj &lt; 0 || tmpi &gt; 7 || tmpj &gt; 7)<br>                continue;<br><br>            // 如果这个方向可走，记录下来<br>            if(board[tmpi][tmpj] == 0) {<br>                nexti[l] = tmpi;<br>                nextj[l] = tmpj;<br>                // 可走的方向加一个<br>                l++;<br>            }<br>        }<br><br>        count = l;<br><br>        // 如果可走的方向为0个，返回<br>        if(count == 0) {<br>            return 0;<br>        }<br>        else if(count == 1) {<br>            // 只有一个可走的方向<br>            // 所以直接是最少出路的方向<br>            min = 0;<br>        }<br>        else {<br>            // 找出下一个位置的出路数<br>            for(l = 0; l &lt; count; l++) {<br>                for(k = 0; k &lt; 8; k++) {<br>                    tmpi = nexti[l] + ktmove1[k];<br>                    tmpj = nextj[l] + ktmove2[k];<br><br>                    if(tmpi &lt; 0 || tmpj &lt; 0 || <br>                       tmpi &gt; 7 || tmpj &gt; 7) {<br>                        continue;<br>                    }<br><br>                    if(board[tmpi][tmpj] == 0)<br>                        exists[l]++;<br>                }<br>            }<br><br>            tmp = exists[0];<br>            min = 0;<br><br>            // 从可走的方向中寻找最少出路的方向<br>            for(l = 1; l &lt; count; l++) {<br>                if(exists[l] &lt; tmp) {<br>                    tmp = exists[l];<br>                    min = l;<br>                }<br>            }<br>        }<br><br>        // 走最少出路的方向<br>        i = nexti[min];<br>        j = nextj[min];<br>        board[i][j] = m;<br>    }<br><br>    return 1;<br>} <br></pre>
+
+
+<ul>
+  <li> Java
+  </li>
+</ul>
+
+<pre>public class Knight {<br>    public boolean travel(int startX, <br>                          int startY, int[][] board) {<br>        // 对应骑士可走的八个方向<br>        int[] ktmove1 = {-2, -1, 1, 2, 2, 1, -1, -2};<br>        int[] ktmove2 = {1, 2, 2, 1, -1, -2, -2, -1};<br>        <br>        // 下一步出路的位置<br>        int[] nexti = new int[board.length];<br>        int[] nextj = new int[board.length];<br>        <br>        // 记录出路的个数<br>        int[] exists = new int[board.length];<br>        <br>        int x = startX;<br>        int y = startY;<br>        <br>        board[x][y] = 1;<br>        <br>        for(int m = 2; m &lt;= Math.pow(board.length, 2); m++) {<br>            for(int k = 0; k &lt; board.length; k++) {<br>                exists[k] = 0;<br>            }<br>            <br>            int count = 0;<br>            // 试探八个方向<br>            for(int k = 0; k &lt; board.length; k++) {<br>                int tmpi = x + ktmove1[k];<br>                int tmpj = y + ktmove2[k];<br>                <br>                // 如果是边界了，不可走<br>                if(tmpi &lt; 0 || tmpj &lt; 0 || <br>                   tmpi &gt; 7 || tmpj &gt; 7) {<br>                    continue;<br>                }<br>                <br>                // 如果这个方向可走，记录下来<br>                if(board[tmpi][tmpj] == 0) {<br>                    nexti[count] = tmpi;<br>                    nextj[count] = tmpj;<br>                    // 可走的方向加一个<br>                    count++;<br>                }<br>            }<br>            <br>            int min = -1;<br>            if(count == 0) {<br>                return false;<br>            }<br>            else if(count == 1) {<br>                min = 0;<br>            }<br>            else {<br>                // 找出下一个位置的出路数<br>                for(int l = 0; l &lt; count; l++) {<br>                    for(int k = 0; k &lt; board.length; k++) {<br>                        int tmpi = nexti[l] + ktmove1[k];<br>                        int tmpj = nextj[l] + ktmove2[k];<br><br>                        if(tmpi &lt; 0 || tmpj &lt; 0 || <br>                           tmpi &gt; 7 || tmpj &gt; 7) {<br>                            continue;<br>                        }<br><br>                        if(board[tmpi][tmpj] == 0)<br>                            exists[l]++;<br>                    }<br>                }<br><br>                int tmp = exists[0];<br>                min = 0;<br><br>                // 从可走的方向中寻找最少出路的方向<br>                for(int l = 1; l &lt; count; l++) {<br>                    if(exists[l] &lt; tmp) {<br>                        tmp = exists[l];<br>                        min = l;<br>                    }<br>                }<br>            }<br>            <br>            // 走最少出路的方向<br>            x = nexti[min];<br>            y = nextj[min];<br>            board[x][y] = m;<br>        }<br>        <br>        return true;<br>    }<br>    <br>    public static void main(String[] args) {<br>        int[][] board = new int[8][8];<br>        Knight knight = new Knight();<br>        <br>        if(knight.travel(<br>                Integer.parseInt(args[0]), <br>                Integer.parseInt(args[1]), board)) {<br>            System.out.println("游历完成！");<br>        }<br>        else {<br>            System.out.println("游历失败！");<br>        }<br>        <br>        for(int i = 0; i &lt; board.length; i++) {<br>            for(int j = 0; j &lt; board[0].length; j++) {<br>                if(board[i][j] &lt; 10) {<br>                    System.out.print(" " + board[i][j]);<br>                }<br>                else {<br>                    System.out.print(board[i][j]);<br>                }<br>                System.out.print(" ");<br>            }<br>            System.out.println();<br>        }<br>    }<br>}</pre>
+<br>
+<br>
+
+
+
+</body>
+</html>

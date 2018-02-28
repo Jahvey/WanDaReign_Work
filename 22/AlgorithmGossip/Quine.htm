@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/stdlayout.css" type="text/css">
+
+
+
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/print.css" type="text/css">
+
+
+
+
+  
+  
+  
+  
+  <meta content="text/html; charset=gb2312" http-equiv="content-type">
+
+
+
+
+  
+  
+  
+  
+  <title>自产生程式（quine）</title>
+</head>
+
+
+<body>
+
+
+
+
+<h3><a href="http://caterpillar.onlyfun.net/GossipCN/index.html">From
+Gossip@caterpillar</a></h3>
+
+
+
+
+<h1><a href="AlgorithmGossip.htm">Algorithm Gossip:&nbsp;自产生程式（quine）</a></h1>
+
+
+
+
+<h2> 说明</h2>
+
+自产生程式（quine）就是要写一个程式，这个程式的目的就是描述它自己，简单的说，如果您写了一个.java，编译它后产生一个.class档，然后
+您将.java档案删除，您的.class档不需要.java档，它也可以印出.java档的内容。
+<h2> 解法</h2>
+
+根据计算理论（Computation
+Theorem）递回原理，任何的程式语言都可以简单的写出自产生程式。简单指的是写出自产生程式并不需要特别的算法，只要利用Turing
+Machine的扩充多带Turing Machine的操作原理就可以写出。 <br>
+
+<br>
+撇开计算理论这看似高深的学科不谈们用一般的解释来说明如何写自产生程式，程式分做A、B两个部分，A部分描述B部分的功能，B部分则
+负责将A的描述印出来，A似乎必须倚赖建构好的B，但B要有A才能列印，这看似矛盾，但其实不然，做法是将B编码，放置在不同的字元带上，几个字元带并不
+是重点，看程式语言的语法而定，您可能需要多几个带，或少几个带，编码好之后，A部分完成，开始进入B部分，B部分不断在多个字元带上来回，并挑选出字元
+并显示出来。 
+<h2> 实作</h2>
+
+直接看实例会容易懂些，以下是以Java程式实作的自产生程式，还考虑了程式缩排与可读性。<br>
+
+
+<br>
+<a class="urllink" href="PrintSelf.java">PrintSelf.java</a><br>
+
+<br>
+
+<a style="font-weight: bold;" href="http://www.nyx.org/%7Egthompso/quine.htm"><cite class="urllink">The Quine Page</cite></a>
+有各种语言的自产生程式之实现。
+<br>
+
+
+
+
+</body>
+</html>

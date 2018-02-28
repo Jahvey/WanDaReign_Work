@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/stdlayout.css" type="text/css">
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/print.css" type="text/css">
+
+
+
+
+
+  
+  
+  
+  
+  
+  <meta content="text/html; charset=gb2312" http-equiv="content-type">
+
+
+
+
+
+  
+  
+  
+  
+  
+  <title>上三角、下三角、对称矩阵</title>
+</head>
+
+
+<body>
+
+
+
+
+
+<h3><a href="http://taobao.esmartweb.com/man.htm"># 面试时穿什么着装合适，这里找答案! #</a></h3>
+
+
+
+
+
+<h1><a href="AlgorithmGossip.htm">Algorithm Gossip: 上三角、下三角、对称矩阵</a></h1>
+
+
+
+
+
+<h2>说明</h2>
+
+上三角矩阵是矩阵在对角线以下的元素均为0，即A<sub>ij</sub> = 0，i &gt; j，例如：<br>
+
+<div style="margin-left: 40px;"><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">1&nbsp;&nbsp; 2&nbsp;&nbsp; 3&nbsp;&nbsp; &nbsp; 4&nbsp;&nbsp;&nbsp; 5 </span><br style="font-weight: bold; font-family: Courier New,Courier,monospace;">
+
+<span style="font-weight: bold; font-family: Courier New,Courier,monospace;">0&nbsp;&nbsp; 6&nbsp;&nbsp; 7&nbsp;&nbsp; &nbsp; 8&nbsp;&nbsp;&nbsp; 9 </span><br style="font-weight: bold; font-family: Courier New,Courier,monospace;">
+
+<span style="font-weight: bold; font-family: Courier New,Courier,monospace;">0&nbsp;&nbsp; 0&nbsp;&nbsp; 10 &nbsp;&nbsp; 11&nbsp; &nbsp;12 </span><br style="font-weight: bold; font-family: Courier New,Courier,monospace;">
+
+<span style="font-weight: bold; font-family: Courier New,Courier,monospace;">0&nbsp;&nbsp; 0&nbsp;&nbsp; 0&nbsp;&nbsp; &nbsp; 13&nbsp; &nbsp;14 </span><br style="font-weight: bold; font-family: Courier New,Courier,monospace;">
+
+<span style="font-weight: bold; font-family: Courier New,Courier,monospace;">0&nbsp;&nbsp; 0&nbsp;&nbsp; 0&nbsp; &nbsp;&nbsp; 0&nbsp; &nbsp; 15</span><br>
+
+</div>
+
+<br>
+
+下三角矩阵是矩阵在对角线以上的元素均为0，即A<sub>ij </sub>= 0，i &lt; j，例如：<br>
+
+<div style="margin-left: 40px;"><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">&nbsp;1&nbsp;&nbsp; 0&nbsp;&nbsp; 0&nbsp;&nbsp; 0&nbsp;&nbsp; 0 </span><br style="font-weight: bold; font-family: Courier New,Courier,monospace;">
+
+<span style="font-weight: bold; font-family: Courier New,Courier,monospace;">&nbsp;2&nbsp;&nbsp; 6&nbsp;&nbsp; 0&nbsp;&nbsp; 0&nbsp;&nbsp; 0 </span><br style="font-weight: bold; font-family: Courier New,Courier,monospace;">
+
+<span style="font-weight: bold; font-family: Courier New,Courier,monospace;">&nbsp;3&nbsp;&nbsp; 7&nbsp;&nbsp; 10&nbsp; 0&nbsp;&nbsp; 0 </span><br style="font-weight: bold; font-family: Courier New,Courier,monospace;">
+
+<span style="font-weight: bold; font-family: Courier New,Courier,monospace;">&nbsp;4&nbsp;&nbsp; 8&nbsp;&nbsp; 11&nbsp; 13&nbsp; 0 </span><br style="font-weight: bold; font-family: Courier New,Courier,monospace;">
+
+<span style="font-weight: bold; font-family: Courier New,Courier,monospace;">&nbsp;5&nbsp;&nbsp; 9&nbsp;&nbsp; 12&nbsp; 14&nbsp; 15 </span><br>
+
+</div>
+
+<br>
+
+对称矩阵是矩阵元素对称于对角线，例如：<br>
+
+<div style="margin-left: 40px;"><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">&nbsp;1&nbsp;&nbsp; 2&nbsp;&nbsp; 3&nbsp;&nbsp; 4&nbsp;&nbsp; 5 </span><br style="font-weight: bold; font-family: Courier New,Courier,monospace;">
+
+<span style="font-weight: bold; font-family: Courier New,Courier,monospace;">&nbsp;2&nbsp;&nbsp; 6&nbsp;&nbsp; 7&nbsp;&nbsp; 8&nbsp;&nbsp; 9 </span><br style="font-weight: bold; font-family: Courier New,Courier,monospace;">
+
+<span style="font-weight: bold; font-family: Courier New,Courier,monospace;">&nbsp;3&nbsp;&nbsp; 7&nbsp;&nbsp; 10&nbsp; 11&nbsp; 12 </span><br style="font-weight: bold; font-family: Courier New,Courier,monospace;">
+
+<span style="font-weight: bold; font-family: Courier New,Courier,monospace;">&nbsp;4&nbsp;&nbsp; 8&nbsp;&nbsp; 11&nbsp; 13&nbsp; 14 </span><br style="font-weight: bold; font-family: Courier New,Courier,monospace;">
+
+<span style="font-weight: bold; font-family: Courier New,Courier,monospace;">&nbsp;5&nbsp;&nbsp; 9&nbsp;&nbsp; 12&nbsp; 14&nbsp; 15 </span><br>
+
+</div>
+
+<br>
+
+上三角或下三角矩阵也有大部份的元素不储存值（为0），我们可以将它们使用一维阵列来储存以节省储存空间，而对称矩阵因为对称于对角线，所以可以视为上三角或下三角矩阵来储存。<br>
+
+<h2>解法</h2>
+
+假设矩阵为nxn，为了计算方便，我们让阵列索引由1开始，上三角矩阵化为一维阵列，若以列为主，其公式为：<br>
+
+<div style="margin-left: 40px;"><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">loc = n*(i-1) - i*(i-1)/2 + j</span><br>
+
+</div>
+
+<br>
+
+化为以行为主，其公式为：<br>
+
+<div style="margin-left: 40px;"><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">loc = j*(j-1)/2 + i</span><br>
+
+</div>
+
+<br>
+
+下三角矩阵化为一维阵列，若以列为主，其公式为：<br>
+
+<div style="margin-left: 40px;"><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">loc = i*(i-1)/2 + j</span><br>
+
+</div>
+
+<br>
+
+若以行为主，其公式为：<br>
+
+<div style="margin-left: 40px;"><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">loc = n*(j-1) - j*(j-1)/2 + i</span><br>
+
+</div>
+
+<br>
+
+公式的导证其实是由等差级数公式得到，您可以自行绘图并看看就可以导证出来，对于C/C++或Java等索引由0开始的语言来说，只要将i与j各加1，求得loc之后减1即可套用以上的公式。 <br>
+
+
+<br>
+
+<h2> 实作</h2>
+
+
+<ul>
+
+  <li> C
+  </li>
+
+</ul>
+
+
+<pre>#include &lt;stdio.h&gt; <br>#include &lt;stdlib.h&gt; <br>#define N 5 <br><br>int main(void) { <br>    int arr1[N][N] = { <br>        {1, 2, 3,  4,   5}, <br>        {0, 6, 7,  8,   9}, <br>        {0, 0, 10, 11, 12}, <br>        {0, 0, 0,  13, 14}, <br>        {0, 0, 0,  0,  15}}; <br><br>    int arr2[N*(1+N)/2] = {0}; <br><br>    int i, j, loc = 0; <br><br>    printf("原二维资料：\n"); <br>    for(i = 0; i &lt; N; i++) { <br>        for(j = 0; j &lt; N; j++) { <br>            printf("%4d", arr1[i][j]); <br>        } <br>        printf("\n"); <br>    } <br><br>    printf("\n以列为主："); <br>    for(i = 0; i &lt; N; i++) { <br>        for(j = 0; j &lt; N; j++) { <br>            if(arr1[i][j] != 0) <br>                arr2[loc++] = arr1[i][j]; <br>        } <br>    } <br>    for(i = 0; i &lt; N*(1+N)/2; i++) <br>        printf("%d ", arr2[i]); <br><br>    printf("\n输入索引(i, j)："); <br>    scanf("%d, %d", &amp;i, &amp;j); <br>    loc = N*i - i*(i+1)/2 + j; <br>    printf("(%d, %d) = %d", i, j, arr2[loc]); <br><br>    printf("\n"); <br><br>    return 0; <br>} <br></pre>
+
+
+<br>
+
+
+<ul>
+
+  <li> Java
+  </li>
+
+</ul>
+
+
+<pre>public class TriangleArray {<br>    private int[] arr;<br>    private int length;<br>    <br>    public TriangleArray(int[][] array) {<br>        length = array.length;<br>        arr = new int[length*(1+length)/2];<br>        <br>        int loc = 0;<br>        for(int i = 0; i &lt; length; i++) { <br>            for(int j = 0; j &lt; length; j++) { <br>                if(array[i][j] != 0) <br>                    arr[loc++] = array[i][j]; <br>            } <br>        }<br>    }<br>    <br>    public int getValue(int i, int j) {<br>        int loc = length*i - i*(i+1)/2 + j;<br>        return arr[loc];<br>    }<br><br>    public static void main(String[] args) {<br>        int[][] array = { <br>                {1, 2, 3,  4,   5}, <br>                {0, 6, 7,  8,   9}, <br>                {0, 0, 10, 11, 12}, <br>                {0, 0, 0,  13, 14}, <br>                {0, 0, 0,  0,  15}};<br>        <br>        TriangleArray triangleArray =<br>                                   new TriangleArray(array);<br>        <br>        System.out.print(triangleArray.getValue(2, 2));<br>    }<br>}</pre>
+
+<br>
+
+<br>
+
+
+
+
+
+</body>
+</html>

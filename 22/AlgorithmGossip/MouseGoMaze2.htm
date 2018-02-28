@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/stdlayout.css" type="text/css">
+
+
+
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/print.css" type="text/css">
+
+
+
+
+  
+  
+  
+  
+  <meta content="text/html; charset=gb2312" http-equiv="content-type">
+
+
+
+
+  
+  
+  
+  
+  <title>老鼠走迷官（二）</title>
+</head>
+
+
+<body>
+
+
+<h3><a href="http://taobao.esmartweb.com/man.htm"># 面试时穿什么着装合适，这里找答案! #</a></h3>
+
+
+
+
+<h1><a href="AlgorithmGossip.htm">Algorithm Gossip: 老鼠走迷官（二）</a></h1>
+
+
+
+
+<h2>&nbsp;说明</h2>
+
+由于迷宫的设计，老鼠走迷宫的入口至出口路径可能不只一条，如何求出所有的路径呢？<br>
+
+<h2>解法</h2>
+
+求所有路径看起来复杂但其实更简单，只要在老鼠走至出口时显示经过的路径，然后退回上一格重新选择下一个位置继续递回就可以了，比求出单一路径还简单，我们的程式只要作一点修改就可以了。 <br>
+
+<h2> 演算法</h2>
+
+
+<pre>Procedure GO(maze[]) [<br>    VISIT(maze, STARTI, STARTJ);<br>]<br>    <br>Procedure VISIT(maze[], i, j) [<br>    maze[i][j] = 1; <br><br>    IF(i == ENDI AND j == ENDJ) [<br>        // FIND A ROUTE, PRINT THE ROUTE<br>    ]<br><br>    IF(maze[i][j+1] == 0)<br>        VISIT(maze, i, j+1); <br>    IF(maze[i+1][j] == 0)<br>        VISIT(maze, i+1, j); <br>    IF(maze[i][j-1] == 0)<br>        VISIT(maze, i, j-1); <br>    if(maze[i-1][j] == 0)<br>        VISIT(maze, i-1, j); <br><br>    maze[i][j] = 0; <br>] <br></pre>
+
+
+
+<h2> 实作</h2>
+
+
+<ul>
+
+  <li> C
+  </li>
+
+</ul>
+
+
+<pre>#include &lt;stdio.h&gt;<br>#include &lt;stdlib.h&gt; <br><br>void visit(int, int);<br><br>int maze[9][9] = {{2, 2, 2, 2, 2, 2, 2, 2, 2},<br>                  {2, 0, 0, 0, 0, 0, 0, 0, 2},<br>                  {2, 0, 2, 2, 0, 2, 2, 0, 2},<br>                  {2, 0, 2, 0, 0, 2, 0, 0, 2},<br>                  {2, 0, 2, 0, 2, 0, 2, 0, 2},<br>                  {2, 0, 0, 0, 0, 0, 2, 0, 2},<br>                  {2, 2, 0, 2, 2, 0, 2, 2, 2},<br>                  {2, 0, 0, 0, 0, 0, 0, 0, 2},<br>                  {2, 2, 2, 2, 2, 2, 2, 2, 2}};<br><br>int startI = 1, startJ = 1;  // 入口<br>int endI = 7, endJ = 7;  // 出口<br><br>int main(void) { <br>    int i, j; <br><br>    printf("显示迷宫：\n"); <br>    for(i = 0; i &lt; 9; i++) { <br>        for(j = 0; j &lt; 9; j++) <br>            if(maze[i][j] == 2) <br>                printf("█"); <br>            else <br>                printf("  "); <br>        printf("\n"); <br>    } <br><br>    visit(startI, startJ);<br><br>    return 0; <br>} <br><br>void visit(int i, int j) {<br>    int m, n;<br><br>    maze[i][j] = 1; <br><br>    if(i == endI &amp;&amp; j == endJ) {<br>        printf("\n显示路径：\n");<br>        for(m = 0; m &lt; 9; m++) {<br>            for(n = 0; n &lt; 9; n++)<br>                if(maze[m][n] == 2)<br>                    printf("█");<br>                else if(maze[m][n] == 1)<br>                    printf("◇");<br>                else<br>                    printf("  ");<br>            printf("\n");<br>        }<br>    }<br><br>    if(maze[i][j+1] == 0) visit(i, j+1);<br>    if(maze[i+1][j] == 0) visit(i+1, j);<br>    if(maze[i][j-1] == 0) visit(i, j-1);<br>    if(maze[i-1][j] == 0) visit(i-1, j);<br><br>    maze[i][j] = 0;<br>}  <br></pre>
+
+
+<br>
+
+
+<ul>
+
+  <li> Java
+  </li>
+
+</ul>
+
+
+<pre>public class Mouse {<br>    private int startI, startJ;  // 入口 <br>    private int endI, endJ;  // 出口<br>    <br>    public static void main(String[] args) {<br>        int maze[][] = {{2, 2, 2, 2, 2, 2, 2, 2, 2},<br>                        {2, 0, 0, 0, 0, 0, 0, 0, 2},<br>                        {2, 0, 2, 2, 0, 2, 2, 0, 2},<br>                        {2, 0, 2, 0, 0, 2, 0, 0, 2},<br>                        {2, 0, 2, 0, 2, 0, 2, 0, 2},<br>                        {2, 0, 0, 0, 0, 0, 2, 0, 2},<br>                        {2, 2, 0, 2, 2, 0, 2, 2, 2},<br>                        {2, 0, 0, 0, 0, 0, 0, 0, 2},<br>                        {2, 2, 2, 2, 2, 2, 2, 2, 2}};<br>        <br>        System.out.println("显示迷宫："); <br>        for(int i = 0; i &lt; maze.length; i++) { <br>            for(int j = 0; j &lt; maze[0].length; j++) <br>                if(maze[i][j] == 2) <br>                    System.out.print("█"); <br>                else <br>                    System.out.print("  "); <br>            System.out.println(); <br>        }<br><br>        Mouse mouse = new Mouse();<br>        mouse.setStart(1, 1);<br>        mouse.setEnd(7, 7);<br>        <br>        mouse.go(maze);<br>    }<br>    <br>    public void setStart(int i, int j) {<br>        this.startI = i;<br>        this.startJ = j;<br>    }<br>    <br>    public void setEnd(int i, int j) {<br>        this.endI = i;<br>        this.endJ = j;<br>    }<br>    <br>    public void go(int[][] maze) {<br>        visit(maze, startI, startJ);<br>    }<br>    <br>    private void visit(int[][] maze, int i, int j) {<br>        maze[i][j] = 1; <br><br>        if(i == endI &amp;&amp; j == endJ) {<br>            System.out.println("\n找到出口！");<br>            for(int m = 0; m &lt; maze.length; m++) { <br>                for(int n = 0; n &lt; maze[0].length; n++) { <br>                    if(maze[m][n] == 2) <br>                        System.out.print("█"); <br>                    else if(maze[m][n] == 1) <br>                        System.out.print("◇"); <br>                    else <br>                        System.out.print("  "); <br>                } <br>                System.out.println();<br>            }<br>        }<br><br>        if(maze[i][j+1] == 0) <br>            visit(maze, i, j+1); <br>        if(maze[i+1][j] == 0)<br>            visit(maze, i+1, j); <br>        if(maze[i][j-1] == 0)<br>            visit(maze, i, j-1); <br>        if(maze[i-1][j] == 0)<br>            visit(maze, i-1, j); <br>       <br>        maze[i][j] = 0;<br>    }<br>}</pre>
+
+<br>
+
+
+
+
+</body>
+</html>

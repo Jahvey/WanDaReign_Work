@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/stdlayout.css" type="text/css">
+
+
+
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/print.css" type="text/css">
+
+
+
+
+  
+  
+  
+  
+  <meta content="text/html; charset=gb2312" http-equiv="content-type">
+
+
+
+
+  
+  
+  
+  
+  <title>伫列 - 使用阵列实作</title>
+</head>
+
+
+<body>
+
+
+
+
+<h3><a href="http://taobao.esmartweb.com/man.htm"># 面试时穿什么着装合适，这里找答案! #</a></h3>
+
+
+
+
+<h1><a href="AlgorithmGossip.htm">Algorithm Gossip:&nbsp;伫列 - 使用阵列实作</a></h1>
+
+
+
+
+<h2>说明</h2>
+伫列是一种先进先出的资料结构，想像您在管子中放入球，最先放入的球在另一端会最先跑出来，在这边介绍如何使用阵列来实作伫列。<br>
+<h2>解法</h2>
+使用阵列来实作伫列，我们必须保留两个旗标，假设front指向伫列的前端，rear向伫列的后端，我们每次从伫列后端加入一个资料，rear就加1指向最后一个资料，每次从伫列前端取出一个资料，front就加1指向伫列的最前端，如下图所示：<br>
+<div style="text-align: center;"><img style="width: 401px; height: 97px;" alt="Quene" title="Quene" src="images/queneByArray-1.jpg"><br>
+</div>
+<br>
+这是最简单的伫列实作，但是由于阵列的大小必须先决定，所以这种线性的结构有个问题，front与rear会到达阵列的后端，而这个阵列就不能再使用了，
+为了解决这个问题，将阵列当作环状来使用，当front或rear到达阵列后端时，就重新从阵列前端再循环，也就是形成环状伫列，如下图所示：<br>
+<div style="text-align: center;"><img style="width: 207px; height: 164px;" alt="Quene" title="Quene" src="images/queneByArray-2.jpg"><br>
+</div>
+<br>
+<br>
+不过阵列的容量还是受限制，所以这个阵列还是会满的，当front = rear时，伫列就满了；伫列的基本操作有五项：新增伫列、加入资料、显示前端资料、取出前端资料、显示所有的伫列元素。 <br>
+
+<br>
+<h2> 实作</h2>
+
+<ul>
+  <li> C </li>
+</ul>
+
+<pre>#include &lt;stdio.h&gt; <br>#include &lt;stdlib.h&gt; <br>#define N 10 <br><br>void createq(int[], int*, int*); <br>void showfront(int[], int, int); <br>void add(int[], int*, int*, int); <br>void del(int[], int*, int*); <br>void showqueue(int[], int, int); <br><br>int main(void) { <br>    int queue[N]; <br>    int front, rear; <br>    int input, select; <br><br>    createq(queue, &amp;front, &amp;rear); <br><br>    while(1) { <br>        printf("\n\n请输入选项(-1结束)："); <br>        printf("\n(1)插入值至伫列"); <br>        printf("\n(2)显示伫列前端"); <br>        printf("\n(3)删除前端值"); <br>        printf("\n(4)显示所有内容"); <br>        printf("\n$c&gt;"); <br>        scanf("%d", &amp;select); <br>        <br>        if(select == -1) <br>            break; <br><br>        switch(select) { <br>            case 1: <br>                printf("\n输入值："); <br>                scanf("%d", &amp;input); <br>                add(queue, &amp;front, &amp;rear, input); <br>                break; <br>            case 2: <br>                showfront(queue, front, rear); <br>                break; <br>            case 3: <br>                del(queue, &amp;front, &amp;rear); <br>                break; <br>            case 4: <br>                showqueue(queue, front, rear); <br>                break; <br>            default: <br>                printf("\n选项错误！"); <br>        } <br>    } <br><br>    printf("\n"); <br><br>    return 0; <br>} <br><br>void createq(int queue[], int* front, int* rear) { <br>    int i; <br><br>    for(i = 0; i &lt; N; i++) <br>        queue[i] = 0; <br><br>    *front = *rear = 0; <br>} <br><br>void showfront(int queue[], int front, int rear) { <br>    if(front == rear) <br>        printf("\n伫列为空！"); <br>    else <br>        printf("%d", queue[(front+1) % N]); <br>} <br><br>void add(int queue[], int* front, int* rear, int data) { <br>    int f, r; <br>    f = *front; <br>    r = *rear; <br>    r = (r+1) % N; <br><br>    if(f == r) { <br>        printf("\n伫列已满！"); <br>        return; <br>    } <br><br>    queue[r] = data; <br>    *rear = r; <br>} <br><br>void del(int queue[], int* front, int* rear) { <br>    int f, r; <br>    f = *front; <br>    r = *rear; <br><br>    if(f == r) { <br>        printf("\n伫列为空！"); <br>        return; <br>    } <br><br>    f = (f+1) % N; <br>    *front = f; <br>} <br><br>void showqueue(int queue[], int front, int rear) { <br>    int i; <br><br>    printf("\n伫列内容："); <br>    for(i = (front+1) % N; i &lt;= rear; i++) <br>        printf("%d ", queue[i]); <br>} <br></pre>
+
+<br>
+
+<h2> 补充</h2>
+
+您如果仔细演算过上面的环状伫列，您会发现有一个空间会被浪费掉，这是因为判断伫列已满或已空的条件都是front =
+rear，浪费一个空间对现在的电脑记忆体如此足够来说，并不是个大问题，如果您一定要解决这个问题，可以多使用一个flag来判断，如果flag设定为
+1且front = rear，则表示伫列已满，如果flag设定为0则front =
+rear，则表示伫列已空，这样就不会浪费一个伫列空间了，提供改良后的虚拟码如下： <br>
+
+<pre>Procedure add(queue, n, front, rear, flag, data) <br>    if(front = rear and flag = 1) <br>        then call QUEUE_FULL <br>    queue(rear) &lt;- data <br>    if(front = rear) <br>       then flag &lt;- 1 <br>end add <br><br>Procedure del(queue, n, front, rear, flag, data) <br>    if(front = rear and flag = 0) <br>        then call QUEUE_EMPTY <br>    front &lt;- (front+1) mod n <br>    if(front = rear) <br>        then flag &lt;- 1 <br>end del</pre>
+<br>
+
+
+
+
+</body>
+</html>

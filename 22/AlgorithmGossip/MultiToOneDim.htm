@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/stdlayout.css" type="text/css">
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/print.css" type="text/css">
+
+
+
+
+
+  
+  
+  
+  
+  
+  <meta content="text/html; charset=gb2312" http-equiv="content-type">
+
+
+
+
+
+  
+  
+  
+  
+  
+  <title>多维矩阵转一维矩阵</title>
+</head>
+
+
+<body>
+
+
+
+
+<h3><a href="http://taobao.esmartweb.com/man.htm"># 面试时穿什么着装合适，这里找答案! #</a></h3>
+
+
+
+<h1><a href="AlgorithmGossip.htm">Algorithm Gossip: 多维矩阵转一维矩阵</a></h1>
+
+
+
+
+
+<h2>说明</h2>
+
+有的时候，为了运算方便或资料储存的空间问题，使用一维阵列会比二维或多维阵列来得方便，例如上三角矩阵、下三角矩阵或对角矩阵，使用一维阵列会比使用二维阵列来得节省空间。<br>
+
+<h2>解法</h2>
+
+以二维阵列转一维阵列为例，索引值由0开始，在由二维阵列转一维阵列时，我们有两种方式：“以列（Row）为主”或“以行（Column）为主”。由于
+C/C++、Java等的记忆体配置方式都是以列为主，所以您可能会比较熟悉前者（Fortran的记忆体配置方式是以行为主）。<br>
+
+<br>
+
+以列为主的二维阵列要转为一维阵列时，是将二维阵列由上往下一列一列读入一维阵列，此时索引的对应公式如下所示，其中row与column是二维阵列索引，loc表示对应的一维阵列索引：<br>
+
+<div style="margin-left: 40px;"><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">loc = column + row*行数</span><br>
+
+</div>
+
+<br>
+
+以行为主的二维阵列要转为一维阵列时，是将二维阵列由左往右一行一行读入一维阵列，此时索引的对应公式如下所示：<br>
+
+<div style="margin-left: 40px;"><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">loc = row + column*列数</span><br>
+
+</div>
+
+<br>
+
+公式的推导您画图看看就知道了，如果是三维阵列，则公式如下所示，其中i（个数u1）、j（个数u2）、k（个数u3）分别表示三维阵列的三个索引：<br>
+
+<div style="margin-left: 40px;"><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">以列为主：loc = i*u2*u3 + j*u3 + k</span><br style="font-weight: bold; font-family: Courier New,Courier,monospace;">
+
+<span style="font-weight: bold; font-family: Courier New,Courier,monospace;">以行为主：loc = k*u1*u2 + j*u1 + i</span><br>
+
+</div>
+
+<br>
+
+更高维度的可以自行依此类推，但通常更高维度的建议使用其它资料结构（例如物件包装）会比较具体，也不易搞错。<br>
+
+<br>
+
+在C/C++中若使用到指标时，会遇到指标运算与记忆体空间位址的处理问题，此时也是用到这边的公式，不过必须在每一个项上乘上资料型态的记忆体大小。 <br>
+
+
+<br>
+
+<h2> 实作</h2>
+
+
+<ul>
+
+  <li> C
+  </li>
+
+</ul>
+
+
+<pre>#include &lt;stdio.h&gt; <br>#include &lt;stdlib.h&gt; <br><br>int main(void) { <br>    int arr1[3][4] = {{1, 2, 3, 4}, <br>                     {5, 6, 7, 8}, <br>                     {9, 10, 11, 12}}; <br>    int arr2[12] = {0}; <br>    int row, column, i; <br><br>    printf("原二维资料：\n"); <br>    for(row = 0; row &lt; 3; row++) { <br>        for(column = 0; column &lt; 4; column++) { <br>            printf("%4d", arr1[row][column]); <br>        } <br>        printf("\n"); <br>    } <br><br>    printf("\n以列为主："); <br>    for(row = 0; row &lt; 3; row++) { <br>        for(column = 0; column &lt; 4; column++) { <br>            i = column + row * 4; <br>            arr2[i] = arr1[row][column]; <br>        } <br>    } <br>    for(i = 0; i &lt; 12; i++) <br>        printf("%d ", arr2[i]); <br><br>    printf("\n以行为主："); <br>    for(row = 0; row &lt; 3; row++) { <br>        for(column = 0; column &lt; 4; column++) { <br>            i = row + column * 3; <br>            arr2[i] = arr1[row][column]; <br>        } <br>    } <br>    for(i = 0; i &lt; 12; i++) <br>        printf("%d ", arr2[i]); <br><br>    printf("\n"); <br><br>    return 0; <br>} <br></pre>
+
+
+<br>
+
+
+<ul>
+
+  <li> Java
+  </li>
+
+</ul>
+
+
+<pre>public class TwoDimArray {<br>    public static int[] toOneDimByRow(int[][] array) {<br>        int[] arr = new int[array.length * array[0].length];<br>        for(int row = 0; row &lt; array.length; row++) { <br>            for(int column = 0; <br>                       column &lt; array[0].length; column++) { <br>                int i = column + row * array[0].length; <br>                arr[i] = array[row][column]; <br>            } <br>        }<br>        return arr;<br>    }<br>    <br>    public static int[] toOneDimByColumn(int[][] array) {<br>        int[] arr = new int[array.length * array[0].length];<br>        for(int row = 0; row &lt; array.length; row++) { <br>            for(int column = 0; <br>                        column &lt; array[0].length; column++) { <br>                int i = i = row + column * array.length;<br>                arr[i] = array[row][column]; <br>            } <br>        }<br>        return arr;<br>    }<br>}</pre>
+
+<br>
+
+<br>
+
+<br>
+
+
+
+
+
+</body>
+</html>

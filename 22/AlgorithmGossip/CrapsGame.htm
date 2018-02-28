@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/stdlayout.css" type="text/css">
+
+
+
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/print.css" type="text/css">
+
+
+
+
+  
+  
+  
+  
+  <meta content="text/html; charset=gb2312" http-equiv="content-type">
+
+
+
+
+  
+  
+  
+  
+  <title>Craps赌博游戏</title>
+</head>
+
+
+<body>
+
+
+
+
+<h3><a href="http://taobao.esmartweb.com/man.htm"># 面试时穿什么着装合适，这里找答案! #</a></h3>
+
+
+
+
+<h1><a href="AlgorithmGossip.htm">Algorithm Gossip: Craps赌博游戏</a></h1>
+
+
+
+
+<h2>说明</h2>
+一个简单的赌博游戏，游戏规则如下：玩家掷两个骰子，点数为1到6，如果第一次点数和为7或11，则玩家胜，如果点数和为2、3或12，则玩家输，如果和
+为其它点数，则记录第一次的点数和，然后继续掷骰，直至点数和等于第一次掷出的点数和，则玩家胜，如果在这之前掷出了点数和为7，则玩家输。<br>
+<h2>解法</h2>
+规则看来有些复杂，但是其实只要使用switch配合if条件判断来撰写即可，小心不要弄错胜负顺序即可。<br>
+<h2>实作</h2>
+<ul>
+  <li> C
+  </li>
+</ul>
+
+<pre>#include &lt;stdio.h&gt;<br>#include &lt;stdlib.h&gt;<br>#include &lt;time.h&gt;<br>#define WON 0<br>#define LOST 1<br>#define CONTINUE 2<br><br>int rollDice() { <br>    return (rand() % 6) + (rand() % 6) + 2;<br>}<br><br>int main(void) {<br>    int firstRoll = 1;<br>    int gameStatus = CONTINUE;<br>    int die1, die2, sumOfDice;<br>    int firstPoint = 0;<br>    char c;<br><br>    srand(time(0));<br><br>    printf("Craps赌博游戏，按Enter键开始游戏****");<br><br>    while(1) {<br>         getchar();<br><br>        if(firstRoll) {<br>            sumOfDice = rollDice();<br>            printf("\n玩家掷出点数和：%d\n", sumOfDice);<br><br>            switch(sumOfDice) {<br>                case 7: case 11:<br>                    gameStatus = WON; break;<br>                case 2: case 3: case 12:<br>                    gameStatus = LOST; break;<br>                default:<br>                    firstRoll = 0;<br>                    gameStatus = CONTINUE;<br>                    firstPoint = sumOfDice;<br>                    break;<br>            }<br>        }<br>        else {<br>            sumOfDice = rollDice();<br>            printf("\n玩家掷出点数和：%d\n", sumOfDice);<br><br>            if(sumOfDice == firstPoint)<br>                gameStatus = WON;<br>            else if(sumOfDice == 7)<br>                gameStatus = LOST;<br>        }<br><br>        if(gameStatus == CONTINUE)<br>            puts("未分胜负，再掷一次****\n");<br>        else {<br>            if(gameStatus == WON)<br>                puts("玩家胜");<br>            else<br>                puts("玩家输");<br><br>            printf("再玩一次？");<br>            scanf("%c", &amp;c);<br>            if(c == 'n') {<br>                puts("游戏结束");<br>                break;<br>            }<br>                <br>            firstRoll = 1;<br>        }<br>    }<br><br>    return 0;<br>} <br></pre>
+
+<br>
+
+<ul>
+  <li> Java
+  </li>
+</ul>
+
+<pre>import java.io.*; <br><br>public class Craps { <br>    public static void main(String[] args) <br>                                   throws IOException { <br>        final int WON = 0, LOST = 1, CONTINUE = 2; <br>        boolean firstRoll = true; <br>        int gameStatus = CONTINUE; <br>        int die1, die2, sumOfDice; <br>        int firstPoint = 0; <br>        <br>        System.out.print(<br>                 "Craps赌博游戏，按Enter键开始游戏****"); <br><br>        while(true) { <br>            System.in.read(); <br><br>            if(firstRoll) { <br>               sumOfDice = rollDice(); <br>               System.out.println(<br>                         "\n玩家掷出点数和：" + sumOfDice); <br><br>               switch(sumOfDice) { <br>                    case 7: case 11: <br>                        gameStatus = WON; break; <br>                    case 2: case 3: case 12: <br>                        gameStatus = LOST; break; <br>                    default: <br>                        firstRoll = false; <br>                        gameStatus = CONTINUE; <br>                        firstPoint = sumOfDice; <br>                        break; <br>                } <br>            } <br>            else { <br>                sumOfDice = rollDice(); <br>                System.out.println(<br>                         "\n玩家掷出点数和：" + sumOfDice); <br><br>                if(sumOfDice == firstPoint) <br>                    gameStatus = WON; <br>                else if(sumOfDice == 7) <br>                    gameStatus = LOST; <br>            } <br><br>            if(gameStatus == CONTINUE) <br>                System.out.println("未分胜负，再掷一次****"); <br>            else { <br>                if(gameStatus == WON) <br>                    System.out.println("玩家胜"); <br>                else <br>                    System.out.println("玩家输"); <br><br>                System.out.print("再玩一次？"); <br>                if(System.in.read() == 'n') { <br>                    System.out.println("游戏结束"); <br>                    break; <br>                } <br>                <br>                firstRoll = true; <br>            } <br>        } <br>    } <br><br>    public static int rollDice() { <br>        int roll = ((int)(Math.random() * 6) + <br>                    (int)(Math.random() * 6)); <br><br>        if(roll &lt; 2) {<br>            roll = 2;<br>        }<br><br>        return roll;<br>    } <br>}</pre>
+<br>
+
+
+
+
+</body>
+</html>

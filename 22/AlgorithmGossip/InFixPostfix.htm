@@ -1,0 +1,340 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/stdlayout.css" type="text/css">
+
+
+
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/print.css" type="text/css">
+
+
+
+
+  
+  
+  
+  
+  <meta content="text/html; charset=gb2312" http-equiv="content-type">
+
+
+
+
+  
+  
+  
+  
+  <title>中序式转后序式（前序式）</title>
+</head>
+
+
+<body>
+
+
+
+<h3><a href="http://taobao.esmartweb.com/man.htm"># 面试时穿什么着装合适，这里找答案! #</a></h3>
+
+
+
+
+<h1><a href="AlgorithmGossip.htm">Algorithm Gossip: 中序式转后序式（前序式）</a></h1>
+
+
+
+
+<h2>说明</h2>
+
+平常所使用的运算式，主要是将运算元放在运算子的两旁，例如a+b/d这样的式子，这称之为中序（Infix）表示式，对于人类来说，这样的式子很容易理
+解，但由于电脑执行指令时是有顺序的，遇到中序表示式时，无法直接进行运算，而必须进一步判断运算的先后顺序，所以必须将中序表示式转换为另一种表示方
+法。<br>
+
+<br>
+
+可以将中序表示式转换为后序（Postfix）表示式，后序表示式又称之为逆向波兰表示式（Reverse polish notation），它是由波兰的数学家卢卡谢维奇提出，例如(a+b)*(c+d)这个式子，表示为后序表示式时是ab+cd+*。<br>
+
+<h2>解法</h2>
+
+用手算的方式来计算后序式相当的简单，将运算子两旁的运算元依先后顺序全括号起来，然后将所有的右括号取代为左边最接近的运算子（从最内层括号开始），最后去掉所有的左括号就可以完成后序表示式，例如：<br>
+
+<div style="margin-left: 40px;"><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">a+b*d+c/d &nbsp; =&gt;&nbsp; &nbsp; ((a+(b*d))+(c/d)) -&gt; bd*+cd/+</span><br>
+
+</div>
+
+<br>
+
+如果要用程式来进行中序转后序，则必须使用堆叠，演算法很简单，直接叙述的话就是使用回圈，取出中序式的字元，遇运算元直接输出，堆叠运算子与左括号， ISP&gt;ICP的话直接输出堆叠中的运算子，遇右括号输出堆叠中的运算子至左括号。 <br>
+
+<br>
+
+<h2> 演算法</h2>
+
+
+以下是虚拟码的运算法，\0表示中序式读取完毕： <br>
+
+
+<pre>Procedure Postfix(infix) [<br>    Loop [<br>        op = infix(i) <br>        case [<br>            :x = '\0': <br>                while (stack not empty) <br>                     // output all elements in stack <br>                end <br>                return <br>             :x = '(': <br>                 // put it into stack <br>             :x is operator: <br>                  while (priority(stack[top]) &gt;= <br>                         priority(op)) [<br>                       // out a element from stack <br>                  ]<br>                  // save op into stack <br>             :x = ')': <br>                   while ( stack(top) != '(' ) [<br>                       // out a element from stack <br>                   ]<br>                   top = top - 1  // not out '( <br>             :else: <br>                   // output current op <br>        ]<br>        i++; <br>    ]<br>] <br></pre>
+
+
+<br>
+
+例如(a+b)*(c+d)这个式子，依演算法的输出过程如下： 
+<table border="1" width="50%">
+
+
+  <tbody>
+
+
+    <tr>
+
+
+      <td align="left" valign="top"><small>OP </small></td>
+
+
+      <td align="left" valign="top"><small>STACK </small></td>
+
+
+      <td align="left" valign="top"><small>OUTPUT </small></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="left" valign="top"><small>( </small></td>
+
+
+      <td align="left" valign="top"><small>( </small></td>
+
+
+      <td align="left" valign="top"><small>- </small></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="left" valign="top"><small>a </small></td>
+
+
+      <td align="left" valign="top"><small>( </small></td>
+
+
+      <td align="left" valign="top"><small>a </small></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="left" valign="top"><small>+ </small></td>
+
+
+      <td align="left" valign="top"><small>(+ </small></td>
+
+
+      <td align="left" valign="top"><small>a </small></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="left" valign="top"><small>b </small></td>
+
+
+      <td align="left" valign="top"><small>(+ </small></td>
+
+
+      <td align="left" valign="top"><small>ab </small></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="left" valign="top"><small>) </small></td>
+
+
+      <td align="left" valign="top"><small>- </small></td>
+
+
+      <td align="left" valign="top"><small>ab+ </small></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="left" valign="top"><small>* </small></td>
+
+
+      <td align="left" valign="top"><small>* </small></td>
+
+
+      <td align="left" valign="top"><small>ab+ </small></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="left" valign="top"><small>( </small></td>
+
+
+      <td align="left" valign="top"><small>*( </small></td>
+
+
+      <td align="left" valign="top"><small>ab+ </small></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="left" valign="top"><small>c </small></td>
+
+
+      <td align="left" valign="top"><small>*( </small></td>
+
+
+      <td align="left" valign="top"><small>ab+c </small></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="left" valign="top"><small>+ </small></td>
+
+
+      <td align="left" valign="top"><small>*(+ </small></td>
+
+
+      <td align="left" valign="top"><small>ab+c </small></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="left" valign="top"><small>d </small></td>
+
+
+      <td align="left" valign="top"><small>*(+ </small></td>
+
+
+      <td align="left" valign="top"><small>ab+cd </small></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="left" valign="top"><small>) </small></td>
+
+
+      <td align="left" valign="top"><small>* </small></td>
+
+
+      <td align="left" valign="top"><small>ab+cd+ </small></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="left" valign="top"><small>- </small></td>
+
+
+      <td align="left" valign="top"><small>- </small></td>
+
+
+      <td align="left" valign="top"><small>ab+cd+* </small></td>
+
+
+    </tr>
+
+
+  
+  
+  </tbody>
+</table>
+
+
+<br>
+
+如果要将中序式转为前序式，则在读取中序式时是由后往前读取，而左右括号的处理方式相反，其余不变，但输出之前必须先置入堆叠，待转换完成后再将堆叠中的
+值由上往下读出，如此就是前序表示式。 <br>
+
+<h2> 实作</h2>
+
+
+<ul>
+
+  <li> C
+  </li>
+
+</ul>
+
+
+<pre>#include &lt;stdio.h&gt; <br>#include &lt;stdlib.h&gt; <br><br>int postfix(char*); // 中序转后序 <br>int priority(char); // 决定运算子优先顺序 <br><br>int main(void) { <br>    char input[80]; <br><br>    printf("输入中序运算式："); <br>    scanf("%s", input); <br>    postfix(input); <br><br>    return 0; <br>} <br><br>int postfix(char* infix) { <br>    int i = 0, top = 0; <br>    char stack[80] = {'\0'}; <br>    char op; <br><br>    while(1) { <br>        op = infix[i]; <br><br>        switch(op) { <br>            case '\0': <br>                while(top &gt; 0) { <br>                    printf("%c", stack[top]); <br>                    top--; <br>                } <br>                printf("\n"); <br>                return 0; <br>            // 运算子堆叠 <br>            case '(': <br>                if(top &lt; (sizeof(stack) / sizeof(char))) { <br>                    top++; <br>                    stack[top] = op; <br>                } <br>                break; <br>            case '+': case '-': case '*': case '/': <br>                while(priority(stack[top]) &gt;= priority(op)) { <br>                    printf("%c", stack[top]); <br>                    top--; <br>                } <br>                // 存入堆叠 <br>                if(top &lt; (sizeof(stack) / sizeof(char))) { <br>                    top++; <br>                    stack[top] = op; <br>                } <br>                break; <br>            // 遇 ) 输出至 ( <br>            case ')': <br>                while(stack[top] != '(') { <br>                    printf("%c", stack[top]); <br>                    top--; <br>                } <br>                top--;  // 不输出( <br>                break; <br>            // 运算元直接输出 <br>            default: <br>                printf("%c", op); <br>                break; <br>        } <br>        i++; <br>    } <br>} <br><br>int priority(char op) { <br>    int p; <br><br>    switch(op) { <br>       case '+': case '-': <br>            p = 1; <br>            break; <br>        case '*': case '/': <br>            p = 2; <br>            break; <br>        default: <br>            p = 0; <br>            break; <br>    } <br><br>    return p; <br>} <br></pre>
+
+
+<br>
+
+
+<ul>
+
+  <li> Java
+  </li>
+
+</ul>
+
+
+<pre>public class InFix {<br>    private static int priority(char op) {  <br>        switch(op) { <br>           case '+': case '-': <br>                return 1; <br>            case '*': case '/': <br>                return 2;<br>            default: <br>                return 0;<br>        }  <br>    }<br>    <br>    public static char[] toPosfix(char[] infix) {<br>        char[] stack = new char[infix.length]; <br>        char[] postfix = new char[infix.length];<br>        char op; <br><br>        StringBuffer buffer = new StringBuffer();<br><br>        int top = 0;<br>        for(int i = 0; i &lt; infix.length; i++) { <br>            op = infix[i]; <br>            switch(op) {  <br>                // 运算子堆叠 <br>                case '(': <br>                    if(top &lt; stack.length) { <br>                        top++; <br>                        stack[top] = op; <br>                    } <br>                    break; <br>                case '+': case '-': case '*': case '/': <br>                    while(priority(stack[top]) &gt;= <br>                          priority(op)) { <br>                        buffer.append(stack[top]);<br>                        top--; <br>                    } <br>                    // 存入堆叠 <br>                    if(top &lt; stack.length) { <br>                        top++; <br>                        stack[top] = op; <br>                    } <br>                    break; <br>                // 遇 ) 输出至 ( <br>                case ')': <br>                    while(stack[top] != '(') { <br>                        buffer.append(stack[top]);<br>                        top--; <br>                    } <br>                    top--;  // 不输出( <br>                    break; <br>                // 运算元直接输出 <br>                default: <br>                    buffer.append(op);<br>                    break; <br>            } <br>        } <br>        <br>        while(top &gt; 0) { <br>            buffer.append(stack[top]);<br>            top--; <br>        }<br>        <br>        return buffer.toString().toCharArray();<br>    }<br>    <br>    public static char[] toPrefix(char[] infix) {<br>        char[] stack = new char[infix.length];<br>        char op; <br><br>        StringBuffer buffer = new StringBuffer();<br>        <br>        int top = 0;<br>        for(int i = infix.length - 1; i &gt;= 0; i--) { <br>            op = infix[i]; <br>            switch(op) {  <br>                // 运算子堆叠 <br>                case ')': <br>                    if(top &lt; stack.length) { <br>                        top++; <br>                        stack[top] = op; <br>                    } <br>                    break; <br>                case '+': case '-': case '*': case '/': <br>                    while(priority(stack[top]) &gt;= <br>                          priority(op)) { <br>                        buffer.append(stack[top]);<br>                        top--; <br>                    } <br>                    // 存入堆叠 <br>                    if(top &lt; stack.length) { <br>                        top++; <br>                        stack[top] = op; <br>                    } <br>                    break; <br>                // 遇 ( 输出至 ) <br>                case '(': <br>                    while(stack[top] != ')') { <br>                        buffer.append(stack[top]);<br>                        top--; <br>                    } <br>                    top--;  // 不输出) <br>                    break; <br>                // 运算元直接输出 <br>                default: <br>                    buffer.append(op); <br>                    break; <br>            } <br>        } <br>        <br>        while(top &gt; 0) { <br>            buffer.append(stack[top]);<br>            top--; <br>        } <br>        <br>        return buffer.reverse().toString().toCharArray();<br>    }<br>    <br>    public static void main(String[] args) {<br>        String infix = "(a+b)*(c+d)";<br>        <br>        System.out.println(<br>                    InFix.toPosfix(infix.toCharArray()));<br>        System.out.println(<br>                    InFix.toPrefix(infix.toCharArray()));<br>    }<br>} </pre>
+
+<br>
+
+<br>
+
+
+
+
+</body>
+</html>

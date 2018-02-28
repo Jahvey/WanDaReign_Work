@@ -1,0 +1,566 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="css/stdlayout.css" type="text/css">
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="css/print.css" type="text/css">
+
+
+
+  
+  
+  
+  <meta content="text/html; charset=gb2312" http-equiv="content-type">
+
+
+
+  
+  
+  
+  <title>背包问题（Knapsack Problem）</title>
+</head>
+
+
+<body>
+
+
+
+<h3><a href="http://caterpillar.onlyfun.net/GossipCN/index.html">From
+Gossip@caterpillar</a></h3>
+
+
+
+<h1><a href="AlgorithmGossip.htm">Algorithm Gossip: 背包问题（Knapsack Problem）</a></h1>
+
+
+
+<h2> 说明</h2>
+
+假设有一个背包的负重最多可达8公斤，而希望在背包中装入负重范围内可得之总价物品，假设是水果好了，水果的编号、单价与重量如下所示： <br>
+
+<table border="1" width="50%">
+
+  <tbody>
+
+    <tr>
+
+      <td align="left" valign="top"><small>0 </small></td>
+
+      <td align="left" valign="top"><small>李子 </small></td>
+
+      <td align="left" valign="top"><small>4KG </small></td>
+
+      <td align="left" valign="top"><small>NT$4500 </small></td>
+
+    </tr>
+
+    <tr>
+
+      <td align="left" valign="top"><small>1 </small></td>
+
+      <td align="left" valign="top"><small>苹果 </small></td>
+
+      <td align="left" valign="top"><small>5KG </small></td>
+
+      <td align="left" valign="top"><small>NT$5700 </small></td>
+
+    </tr>
+
+    <tr>
+
+      <td align="left" valign="top"><small>2 </small></td>
+
+      <td align="left" valign="top"><small>橘子 </small></td>
+
+      <td align="left" valign="top"><small>2KG </small></td>
+
+      <td align="left" valign="top"><small>NT$2250 </small></td>
+
+    </tr>
+
+    <tr>
+
+      <td align="left" valign="top"><small>3 </small></td>
+
+      <td align="left" valign="top"><small>草莓 </small></td>
+
+      <td align="left" valign="top"><small>1KG </small></td>
+
+      <td align="left" valign="top"><small>NT$1100 </small></td>
+
+    </tr>
+
+    <tr>
+
+      <td align="left" valign="top"><small>4 </small></td>
+
+      <td align="left" valign="top"><small>甜瓜 </small></td>
+
+      <td align="left" valign="top"><small>6KG </small></td>
+
+      <td align="left" valign="top"><small>NT$6700 </small></td>
+
+    </tr>
+
+  
+  </tbody>
+</table>
+
+<p></p>
+
+<h2> 解法</h2>
+
+背包问题是关于最佳化的问题，要解最佳化问题可以使用“动态规划”（Dynamic
+programming），从空集合开始，每增加一个元素就先求出该阶段的最佳解，直到所有的元素加入至集合中，最后得到的就是最佳解。 <br>
+
+<br>
+以背包问题为例，我们使用两个阵列value与item，value表示目前的最佳解所得之总价，item表示最后一个放至背包的水果，假设有负重量
+1～8的背包8个，并对每个背包求其最佳解。 <br>
+
+<br>
+逐步将水果放入背包中，并求该阶段的最佳解：<br>
+
+<ul>
+  <li> 放入李子
+  </li>
+</ul>
+
+<table border="1" width="50%">
+
+  <tbody>
+
+    <tr>
+
+      <td align="left" valign="top"><small>背包负重 </small></td>
+
+      <td align="left" valign="top"><small>1 </small></td>
+
+      <td align="left" valign="top"><small>2 </small></td>
+
+      <td align="left" valign="top"><small>3 </small></td>
+
+      <td align="left" valign="top"><small>4 </small></td>
+
+      <td align="left" valign="top"><small>5 </small></td>
+
+      <td align="left" valign="top"><small>6 </small></td>
+
+      <td align="left" valign="top"><small>7 </small></td>
+
+      <td align="left" valign="top"><small>8 </small></td>
+
+    </tr>
+
+    <tr>
+
+      <td align="left" valign="top"><small>value </small></td>
+
+      <td align="left" valign="top"><small>０ </small></td>
+
+      <td align="left" valign="top"><small>０ </small></td>
+
+      <td align="left" valign="top"><small>０ </small></td>
+
+      <td align="left" valign="top"><small>4500 </small></td>
+
+      <td align="left" valign="top"><small>4500 </small></td>
+
+      <td align="left" valign="top"><small>4500 </small></td>
+
+      <td align="left" valign="top"><small>4500 </small></td>
+
+      <td align="left" valign="top"><small>9000 </small></td>
+
+    </tr>
+
+    <tr>
+
+      <td align="left" valign="top"><small>item </small></td>
+
+      <td align="left" valign="top"><small>－ </small></td>
+
+      <td align="left" valign="top"><small>－ </small></td>
+
+      <td align="left" valign="top"><small>－ </small></td>
+
+      <td align="left" valign="top"><small>０ </small></td>
+
+      <td align="left" valign="top"><small>０ </small></td>
+
+      <td align="left" valign="top"><small>０ </small></td>
+
+      <td align="left" valign="top"><small>０ </small></td>
+
+      <td align="left" valign="top"><small>０ </small></td>
+
+    </tr>
+
+  
+  </tbody>
+</table>
+
+<br>
+
+<ul>
+  <li> 放入苹果
+  </li>
+</ul>
+
+<table border="1" width="50%">
+
+  <tbody>
+
+    <tr>
+
+      <td align="left" valign="top"><small>背包负重 </small></td>
+
+      <td align="left" valign="top"><small>1 </small></td>
+
+      <td align="left" valign="top"><small>2 </small></td>
+
+      <td align="left" valign="top"><small>3 </small></td>
+
+      <td align="left" valign="top"><small>4 </small></td>
+
+      <td align="left" valign="top"><small>5 </small></td>
+
+      <td align="left" valign="top"><small>6 </small></td>
+
+      <td align="left" valign="top"><small>7 </small></td>
+
+      <td align="left" valign="top"><small>8 </small></td>
+
+    </tr>
+
+    <tr>
+
+      <td align="left" valign="top"><small>value </small></td>
+
+      <td align="left" valign="top"><small>０ </small></td>
+
+      <td align="left" valign="top"><small>０ </small></td>
+
+      <td align="left" valign="top"><small>０ </small></td>
+
+      <td align="left" valign="top"><small>4500 </small></td>
+
+      <td align="left" valign="top"><small>5700 </small></td>
+
+      <td align="left" valign="top"><small>5700 </small></td>
+
+      <td align="left" valign="top"><small>5700 </small></td>
+
+      <td align="left" valign="top"><small>9000 </small></td>
+
+    </tr>
+
+    <tr>
+
+      <td align="left" valign="top"><small>item </small></td>
+
+      <td align="left" valign="top"><small>－ </small></td>
+
+      <td align="left" valign="top"><small>－ </small></td>
+
+      <td align="left" valign="top"><small>－ </small></td>
+
+      <td align="left" valign="top"><small>０ </small></td>
+
+      <td align="left" valign="top"><small>1 </small></td>
+
+      <td align="left" valign="top"><small>1 </small></td>
+
+      <td align="left" valign="top"><small>1 </small></td>
+
+      <td align="left" valign="top"><small>０ </small></td>
+
+    </tr>
+
+  
+  </tbody>
+</table>
+
+
+<ul>
+  <li> 放入橘子
+  </li>
+</ul>
+
+<table border="1" width="50%">
+
+  <tbody>
+
+    <tr>
+
+      <td align="left" valign="top"><small>背包负重 </small></td>
+
+      <td align="left" valign="top"><small>1 </small></td>
+
+      <td align="left" valign="top"><small>2 </small></td>
+
+      <td align="left" valign="top"><small>3 </small></td>
+
+      <td align="left" valign="top"><small>4 </small></td>
+
+      <td align="left" valign="top"><small>5 </small></td>
+
+      <td align="left" valign="top"><small>6 </small></td>
+
+      <td align="left" valign="top"><small>7 </small></td>
+
+      <td align="left" valign="top"><small>8 </small></td>
+
+    </tr>
+
+    <tr>
+
+      <td align="left" valign="top"><small>value </small></td>
+
+      <td align="left" valign="top"><small>０ </small></td>
+
+      <td align="left" valign="top"><small>2250 </small></td>
+
+      <td align="left" valign="top"><small>2250 </small></td>
+
+      <td align="left" valign="top"><small>4500 </small></td>
+
+      <td align="left" valign="top"><small>5700 </small></td>
+
+      <td align="left" valign="top"><small>6750 </small></td>
+
+      <td align="left" valign="top"><small>7950 </small></td>
+
+      <td align="left" valign="top"><small>9000 </small></td>
+
+    </tr>
+
+    <tr>
+
+      <td align="left" valign="top"><small>item </small></td>
+
+      <td align="left" valign="top"><small>－ </small></td>
+
+      <td align="left" valign="top"><small>2 </small></td>
+
+      <td align="left" valign="top"><small>2 </small></td>
+
+      <td align="left" valign="top"><small>０ </small></td>
+
+      <td align="left" valign="top"><small>1 </small></td>
+
+      <td align="left" valign="top"><small>2 </small></td>
+
+      <td align="left" valign="top"><small>2 </small></td>
+
+      <td align="left" valign="top"><small>０ </small></td>
+
+    </tr>
+
+  
+  </tbody>
+</table>
+
+<br>
+
+<ul>
+  <li> 放入草莓
+  </li>
+</ul>
+
+<table border="1" width="50%">
+
+  <tbody>
+
+    <tr>
+
+      <td align="left" valign="top"><small>背包负重 </small></td>
+
+      <td align="left" valign="top"><small>1 </small></td>
+
+      <td align="left" valign="top"><small>2 </small></td>
+
+      <td align="left" valign="top"><small>3 </small></td>
+
+      <td align="left" valign="top"><small>4 </small></td>
+
+      <td align="left" valign="top"><small>5 </small></td>
+
+      <td align="left" valign="top"><small>6 </small></td>
+
+      <td align="left" valign="top"><small>7 </small></td>
+
+      <td align="left" valign="top"><small>8 </small></td>
+
+    </tr>
+
+    <tr>
+
+      <td align="left" valign="top"><small>value </small></td>
+
+      <td align="left" valign="top"><small>1100 </small></td>
+
+      <td align="left" valign="top"><small>2250 </small></td>
+
+      <td align="left" valign="top"><small>3350 </small></td>
+
+      <td align="left" valign="top"><small>4500 </small></td>
+
+      <td align="left" valign="top"><small>5700 </small></td>
+
+      <td align="left" valign="top"><small>6800 </small></td>
+
+      <td align="left" valign="top"><small>7950 </small></td>
+
+      <td align="left" valign="top"><small>9050 </small></td>
+
+    </tr>
+
+    <tr>
+
+      <td align="left" valign="top"><small>item </small></td>
+
+      <td align="left" valign="top"><small>3 </small></td>
+
+      <td align="left" valign="top"><small>2 </small></td>
+
+      <td align="left" valign="top"><small>3 </small></td>
+
+      <td align="left" valign="top"><small>０ </small></td>
+
+      <td align="left" valign="top"><small>1 </small></td>
+
+      <td align="left" valign="top"><small>3 </small></td>
+
+      <td align="left" valign="top"><small>2 </small></td>
+
+      <td align="left" valign="top"><small>3 </small></td>
+
+    </tr>
+
+  
+  </tbody>
+</table>
+
+<br>
+
+<ul>
+  <li> 放入甜瓜
+  </li>
+</ul>
+
+<table border="1" width="50%">
+
+  <tbody>
+
+    <tr>
+
+      <td align="left" valign="top"><small>背包负重 </small></td>
+
+      <td align="left" valign="top"><small>1 </small></td>
+
+      <td align="left" valign="top"><small>2 </small></td>
+
+      <td align="left" valign="top"><small>3 </small></td>
+
+      <td align="left" valign="top"><small>4 </small></td>
+
+      <td align="left" valign="top"><small>5 </small></td>
+
+      <td align="left" valign="top"><small>6 </small></td>
+
+      <td align="left" valign="top"><small>7 </small></td>
+
+      <td align="left" valign="top"><small>8 </small></td>
+
+    </tr>
+
+    <tr>
+
+      <td align="left" valign="top"><small>value </small></td>
+
+      <td align="left" valign="top"><small>1100 </small></td>
+
+      <td align="left" valign="top"><small>2250 </small></td>
+
+      <td align="left" valign="top"><small>3350 </small></td>
+
+      <td align="left" valign="top"><small>4500 </small></td>
+
+      <td align="left" valign="top"><small>5700 </small></td>
+
+      <td align="left" valign="top"><small>6800 </small></td>
+
+      <td align="left" valign="top"><small>7950 </small></td>
+
+      <td align="left" valign="top"><small>9050 </small></td>
+
+    </tr>
+
+    <tr>
+
+      <td align="left" valign="top"><small>item </small></td>
+
+      <td align="left" valign="top"><small>3 </small></td>
+
+      <td align="left" valign="top"><small>2 </small></td>
+
+      <td align="left" valign="top"><small>3 </small></td>
+
+      <td align="left" valign="top"><small>０ </small></td>
+
+      <td align="left" valign="top"><small>1 </small></td>
+
+      <td align="left" valign="top"><small>3 </small></td>
+
+      <td align="left" valign="top"><small>2 </small></td>
+
+      <td align="left" valign="top"><small>3 </small></td>
+
+    </tr>
+
+  
+  </tbody>
+</table>
+
+<br>
+由最后一个表格，可以得知在背包负重8公斤时，最多可以装入9050元的水果，而最后一个装入的
+水果是3号，也就是草莓，装入了草莓，背包只能再放入7公斤（8-1）的水果，所以必须看背包负重7公斤时的最佳解，最后一个放入的是2号，也就
+是橘子，现在背包剩下负重量5公斤（7-2），所以看负重5公斤的最佳解，最后放入的是1号，也就是苹果，此时背包负重量剩下0公斤（5-5），无法
+再放入水果，所以求出最佳解为放入草莓、橘子与苹果，而总价为9050元。<br>
+<br>
+<h2> 实作</h2>
+
+<ul>
+  <li> C
+  </li>
+</ul>
+
+<pre>#include &lt;stdio.h&gt; <br>#include &lt;stdlib.h&gt; <br><br>#define LIMIT 8   // 重量限制 <br>#define N 5       // 物品种类 <br>#define MIN 1     // 最小重量 <br><br>struct body { <br>    char name[20]; <br>    int size; <br>    int price; <br>}; <br><br>typedef struct body object; <br><br>int main(void) { <br>    int item[LIMIT+1] = {0}; <br>    int value[LIMIT+1] = {0}; <br>    int newvalue, i, s, p; <br><br>    object a[] = {{"李子", 4, 4500}, <br>                  {"苹果", 5, 5700}, <br>                  {"橘子", 2, 2250}, <br>                  {"草莓", 1, 1100}, <br>                  {"甜瓜", 6, 6700}}; <br><br>    for(i = 0; i &lt; N; i++) { <br>        for(s = a[i].size; s &lt;= LIMIT; s++) { <br>            p = s - a[i].size; <br>            newvalue = value[p] + a[i].price; <br>            if(newvalue &gt; value[s]) {// 找到阶段最佳解 <br>                value[s] = newvalue; <br>                item[s] = i; <br>            } <br>        } <br>    } <br><br>    printf("物品\t价格\n"); <br>    for(i = LIMIT; i &gt;= MIN; i = i - a[item[i]].size) { <br>        printf("%s\t%d\n", <br>                  a[item[i]].name, a[item[i]].price); <br>    } <br><br>    printf("合计\t%d\n", value[LIMIT]); <br><br>    return 0; <br>}  <br></pre>
+
+<br>
+
+<ul>
+  <li> Java
+  </li>
+</ul>
+
+<pre>class Fruit {<br>    private String name;<br>    private int size;<br>    private int price;<br>    <br>    public Fruit(String name, int size, int price) {<br>        this.name = name;<br>        this.size = size;<br>        this.price = price;<br>    }<br>    <br>    public String getName() {<br>        return name;<br>    }<br><br>    public int getPrice() {<br>        return price;<br>    }<br><br>    public int getSize() {<br>        return size;<br>    }<br>}<br><br>public class Knapsack {<br>    public static void main(String[] args) {<br>        final int MAX = 8;<br>        final int MIN = 1;<br>        int[] item = new int[MAX+1]; <br>        int[] value = new int[MAX+1];  <br><br>        Fruit fruits[] = {<br>                new Fruit("李子", 4, 4500), <br>                new Fruit("苹果", 5, 5700), <br>                new Fruit("橘子", 2, 2250), <br>                new Fruit("草莓", 1, 1100), <br>                new Fruit("甜瓜", 6, 6700)}; <br><br>        for(int i = 0; i &lt; fruits.length; i++) { <br>            for(int s = fruits[i].getSize(); s &lt;= MAX; s++) { <br>                int p = s - fruits[i].getSize(); <br>                int newvalue = value[p] + <br>                                   fruits[i].getPrice(); <br>                if(newvalue &gt; value[s]) {// 找到阶段最佳解 <br>                    value[s] = newvalue; <br>                    item[s] = i; <br>                } <br>            } <br>        } <br><br>        System.out.println("物品\t价格"); <br>        for(int i = MAX; <br>            i &gt;= MIN; <br>            i = i - fruits[item[i]].getSize()) { <br>            System.out.println(fruits[item[i]].getName()+ <br>                    "\t" + fruits[item[i]].getPrice()); <br>        } <br><br>        System.out.println("合计\t" + value[MAX]);  <br>    }<br>}</pre>
+<br>
+<br>
+<br>
+
+
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/stdlayout.css" type="text/css">
+
+
+
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/print.css" type="text/css">
+
+
+
+
+  
+  
+  
+  
+  <meta content="text/html; charset=gb2312" http-equiv="content-type">
+
+
+
+
+  
+  
+  
+  
+  <title>堆叠 - 使用阵列实作</title>
+</head>
+
+
+<body>
+
+
+<h3><a href="http://taobao.esmartweb.com/man.htm"># 面试时穿什么着装合适，这里找答案! #</a></h3>
+
+
+
+
+<h1><a href="AlgorithmGossip.htm">Algorithm Gossip: 堆叠 - 使用阵列实作</a></h1>
+
+
+
+
+<h2>说明</h2>
+
+堆叠是一种先进后出的资料结构，就如同您将书本放入箱子，最先放进的书本在最后才能拿出来，所有资料的加入与删除都在堆叠顶端完成。堆叠的使用很广，递回
+就是一种堆叠，在之前介绍中序式转后序式时，也使用到堆叠的结构。 <br>
+
+<br>
+堆叠可以使用多种方式实作，其中使用阵列是最简单的方法，也最不受使用的程式语言所限制。
+<h2> 解法</h2>
+
+堆叠最重要的就是记录顶端的位置，尤其是在堆叠空间固定的情况下，必须注意堆叠已满或已空的判断，当使用阵列实作堆叠时尤其重要。 <br>
+
+<br>
+堆叠的基本操作有五项：建立堆叠、传回顶端元素、加入元素至堆叠、删除元素至堆叠、显示堆叠所有内容。为了方便，加入一个测试堆叠是否为空的方法，详
+细的演算并不难，直接列出程式实作。 
+<h2> 实作</h2>
+
+<ul>
+  <li> C
+  </li>
+</ul>
+
+<pre>#include &lt;stdio.h&gt; <br>#include &lt;stdlib.h&gt; <br>#define MAX 10 <br><br>int creates(int[]);         // 建立堆叠 <br>int isEmpty(int);           // 堆叠已空 <br>int stacktop(int[], int);   // 传回顶端元素 <br>int add(int[], int, int);   // 插入元素 <br>int delete(int[], int);     // 删除元素 <br>void list(int[], int);      // 显示所有内容 <br><br>int main(void) { <br>    int stack[MAX]; <br>    int top; <br>    int input, select; <br><br>    top = creates(stack); <br><br>    while(1) { <br>        printf("\n\n请输入选项(-1结束)："); <br>        printf("\n(1)插入值至堆叠"); <br>        printf("\n(2)显示堆叠顶端"); <br>        printf("\n(3)删除顶端值"); <br>        printf("\n(4)显示所有内容"); <br>        printf("\n$c&gt;"); <br>        scanf("%d", &amp;select); <br>        <br>        if(select == -1) <br>            break; <br><br>        switch(select) { <br>            case 1: <br>                printf("\n输入值："); <br>                scanf("%d", &amp;input); <br>                top = add(stack, top, input); <br>                break; <br>            case 2: <br>                printf("\n顶端值：%d", stacktop(stack, top)); <br>                break; <br>            case 3: <br>                top = delete(stack, top); <br>                break; <br>            case 4: <br>                list(stack, top); <br>                break; <br>            default: <br>                printf("\n选项错误！"); <br>        } <br>    } <br><br>    printf("\n"); <br><br>    return 0; <br>} <br><br>// 以下为堆叠操作的实作 <br>int creates(int stack[]) { <br>    int i; <br><br>    for(i = 0; i &lt; MAX; i++) <br>        stack[i] = 0; <br><br>    return -1; <br>} <br><br>int isEmpty(int top) { <br>    return (top == -1); <br>} <br><br>int stacktop(int stack[], int top) { <br>    return stack[top]; <br>} <br><br>int add(int stack[], int top, int item) { <br>    int t = top; <br><br>    if(t &gt;= MAX-1) { <br>        printf("\n堆叠已满！"); <br>        return t; <br>    } <br><br>    stack[++t] = item; <br><br>    return t; <br>} <br><br>int delete(int stack[], int top) { <br>    int t = top; <br><br>    if(isEmpty(t)) { <br>        printf("\n堆叠已空！"); <br>        return t; <br>    } <br><br>    return --t; <br>} <br><br>void list(int stack[], int top) { <br>    int t = top; <br><br>    printf("\n堆叠内容："); <br>    while(!isEmpty(t)) { <br>        printf("%d ", stack[t]); <br>        t--; <br>    } <br>}</pre>
+
+<br>
+
+
+
+
+</body>
+</html>

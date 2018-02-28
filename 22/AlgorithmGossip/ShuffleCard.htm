@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/stdlayout.css" type="text/css">
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/print.css" type="text/css">
+
+
+
+
+
+  
+  
+  
+  
+  
+  <meta content="text/html; charset=gb2312" http-equiv="content-type">
+
+
+
+
+
+  
+  
+  
+  
+  
+  <title>洗扑克牌（乱数排列）</title>
+</head>
+
+
+<body>
+
+
+
+
+
+<h3><a href="http://taobao.esmartweb.com/man.htm"># 面试时穿什么着装合适，这里找答案! #</a></h3>
+
+
+
+
+<h1><a href="AlgorithmGossip.htm">Algorithm Gossip:&nbsp;洗扑克牌（乱数排列）</a></h1>
+
+
+
+
+
+<h2>说明</h2>
+洗扑克牌的原理其实与乱数排列是相同的，都是将一组数字（例如1～N）打乱重新排列，只不过洗扑克牌多了一个花色判断的动作而已。<br>
+<h2>解法</h2>
+初学者通常会直接想到，随机产生1～N的乱数并将之存入阵列中，后来产生的乱数存入阵列前必须先检查阵列中是否已有重复的数字，如果有这个数就不存入，再重新产生下一个数，运气不好的话，重复的次数就会很多，程式的执行速度就很慢了，这不是一个好方法。<br>
+<br>
+以1～52的乱数排列为例好了，可以将阵列先依序由1到52填入，然后使用一个回圈走访阵列，并随机产生1～52的乱数，将产生的乱数当作索引取出阵列值，并与目前阵列走访到的值相交换，如此就不用担心乱数重复的问题了，阵列走访完毕后，所有的数字也就重新排列了。<br>
+<br>
+至于如何判断花色？这只是除法的问题而已，取商数判断花色，取余数判断数字，您可以直接看程式比较清楚。<br>
+<h2>实作</h2>
+
+
+<ul>
+  <li> C
+  </li>
+</ul>
+
+<pre>#include &lt;stdio.h&gt;<br>#include &lt;stdlib.h&gt;<br>#include &lt;time.h&gt;<br>#define N 52<br><br>int main(void) {<br>    int poker[N + 1];<br>    int i, j, tmp, remain;<br><br>    // 初始化阵列 <br>    for(i = 1; i &lt;= N; i++)<br>        poker[i] = i; <br><br>    srand(time(0));<br><br>    // 洗牌 <br>    for(i = 1; i &lt;= N; i++) {<br>        j = rand() % 52 + 1;<br>        tmp = poker[i];<br>        poker[i] = poker[j]; <br>        poker[j] = tmp; <br>    }<br><br>    for(i = 1; i &lt;= N; i++) {<br>        // 判断花色 <br>        switch((poker[i]-1) / 13) { <br>            case 0: <br>                printf("桃"); break;<br>            case 1: <br>                printf("心"); break;<br>            case 2: <br>                printf("砖"); break;<br>            case 3: <br>                printf("梅"); break;<br>        } <br><br>        // 扑克牌数字 <br>        remain = poker[i] % 13;<br>        switch(remain) { <br>            case 0: <br>                printf("K "); break;<br>            case 12: <br>                printf("Q "); break;<br>            case 11: <br>                printf("J "); break;<br>            default: <br>                printf("%d ", remain); break;<br>        } <br><br>        if(i % 13 == 0)<br>            printf("\n");<br>    } <br><br>    return 0;<br>} <br></pre>
+
+<br>
+
+<ul>
+  <li> Java
+  </li>
+</ul>
+
+<pre>public class ShuffleCard { <br>    public static void main(String args[]) { <br>        final int N = 52; <br>        int[] poker = new int[N + 1]; <br><br>        // 初始化阵列 <br>        for(int i = 1; i &lt;= N; i++) <br>            poker[i] = i; <br><br>        // 洗牌 <br>        for(int i = 1; i &lt;= N; i++) { <br>            int j = (int) (Math.random() * N);<br><br>            if(j == 0)<br>                j = 1;<br><br>            int tmp = poker[i]; <br>            poker[i] = poker[j]; <br>            poker[j] = tmp; <br>        } <br><br>        for(int i = 1; i &lt;= N; i++) { <br>            // 判断花色 <br>            switch((poker[i]-1) / 13) { <br>                case 0: <br>                    System.out.print("桃"); break; <br>                case 1: <br>                    System.out.print("心"); break; <br>                case 2: <br>                    System.out.print("砖"); break; <br>                case 3: <br>                    System.out.print("梅"); break; <br>            } <br><br>            // 扑克牌数字 <br>            int remain = poker[i] % 13; <br>            switch(remain) { <br>                case 0: <br>                    System.out.print("K "); break; <br>                case 12: <br>                    System.out.print("Q "); break; <br>                case 11: <br>                    System.out.print("J "); break; <br>                default: <br>                    System.out.print(remain + " "); break; <br>            } <br><br>            if(i % 13 == 0) <br>                System.out.println(""); <br>        } <br>    } <br>}</pre>
+
+
+
+
+
+</body>
+</html>

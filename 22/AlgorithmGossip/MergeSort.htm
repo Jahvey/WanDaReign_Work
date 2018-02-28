@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/stdlayout.css" type="text/css">
+
+
+
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/print.css" type="text/css">
+
+
+
+
+  
+  
+  
+  
+  <meta content="text/html; charset=gb2312" http-equiv="content-type">
+
+
+
+
+  
+  
+  
+  
+  <title>合并排序法</title>
+</head>
+
+
+<body>
+
+
+
+
+<h3><a href="http://taobao.esmartweb.com/man.htm"># 面试时穿什么着装合适，这里找答案! #</a></h3>
+
+
+
+
+<h1><a href="AlgorithmGossip.htm">Algorithm Gossip:&nbsp;合并排序法</a></h1>
+
+
+
+
+<h2>说明</h2>
+之前所介绍的排序法都是在同一个阵列中的排序，考虑今日有两笔或两笔以上的资料，它可能是不同阵列中的资料，或是不同档案中的资料，如何为它们进行排序？<br>
+<h2>解法</h2>
+可以使用合并排序法，合并排序法基本是将两笔已排序的资料合并并进行排序，如果所读入的资料尚未排序，可以先利用其它的排序方式来处理这两笔资料，然后再将排序好的这两笔资料合并。<br>
+<br>
+有人问道，如果两笔资料本身就无排序顺序，何不将所有的资料读入，再一次进行排序？排序的精神是尽量利用资料已排序的部份，来加快排序的效率，小笔资料的
+排序较为快速，如果小笔资料排序完成之后，再合并处理时，因为两笔资料都有排序了，所有在合并排序时会比单纯读入所有的资料再一次排序来的有效率。<br>
+<br>
+那么可不可以直接使用合并排序法本身来处理整个排序的动作？而不动用到其它的排序方式？答案是肯定的，只要将所有的数字不断的分为两个等分，直到最后剩一个数字为止，然后再反过来不断的合并，就如下图所示： <br>
+
+<div style="text-align: center;"><img style="width: 331px; height: 181px;" alt="合并排序" title="合并排序" src="images/mergeSort-1.jpg"></div>
+<br>
+<br>
+不过基本上分割又会花去额外的时间，不如使用其它较好的排序法来排序小笔资料，再使用合并排序来的有效率。<br>
+<br>
+下面这个程式范例，我们使用快速排序法来处理小笔资料排序，然后再使用合并排序法处理合并的动作。 <br>
+<br>
+<h2> 实作</h2>
+
+<ul>
+  <li> C
+  </li>
+</ul>
+
+<pre>#include &lt;stdio.h&gt; <br>#include &lt;stdlib.h&gt; <br>#include &lt;time.h&gt; <br>#define MAX1 10 <br>#define MAX2 10 <br>#define SWAP(x,y) {int t; t = x; x = y; y = t;} <br><br>int partition(int[], int, int); <br>void quicksort(int[], int, int); <br>void mergesort(int[], int, int[], int, int[]); <br><br>int main(void) { <br>    int number1[MAX1] = {0}; <br>    int number2[MAX1] = {0}; <br>    int number3[MAX1+MAX2] = {0}; <br>    int i, num;  <br><br>    srand(time(NULL)); <br><br>    printf("排序前："); <br>    printf("\nnumber1[]："); <br>    for(i = 0; i &lt; MAX1; i++) { <br>        number1[i] = rand() % 100; <br>        printf("%d ", number1[i]); <br>    } <br><br>    printf("\nnumber2[]："); <br>    for(i = 0; i &lt; MAX2; i++) { <br>        number2[i] = rand() % 100; <br>        printf("%d ", number2[i]); <br>    } <br><br>    // 先排序两笔资料 <br>    quicksort(number1, 0, MAX1-1); <br>    quicksort(number2, 0, MAX2-1); <br><br>    printf("\n排序后："); <br>    printf("\nnumber1[]："); <br>    for(i = 0; i &lt; MAX1; i++) <br>        printf("%d ", number1[i]); <br>    printf("\nnumber2[]："); <br>    for(i = 0; i &lt; MAX2; i++) <br>        printf("%d ", number2[i]); <br><br>    // 合并排序 <br>    mergesort(number1, MAX1, number2, MAX2, number3); <br><br>    printf("\n合并后："); <br>    for(i = 0; i &lt; MAX1+MAX2; i++) <br>        printf("%d ", number3[i]); <br>    <br>    printf("\n"); <br><br>    return 0; <br>} <br><br>int partition(int number[], int left, int right) { <br>    int i, j, s; <br><br>    s = number[right]; <br>    i = left - 1; <br><br>    for(j = left; j &lt; right; j++) { <br>        if(number[j] &lt;= s) { <br>            i++; <br>            SWAP(number[i], number[j]); <br>        } <br>    } <br><br>    SWAP(number[i+1], number[right]); <br>    return i+1; <br>} <br><br>void quicksort(int number[], int left, int right) { <br>    int q; <br><br>    if(left &lt; right) { <br>        q = partition(number, left, right); <br>        quicksort(number, left, q-1); <br>        quicksort(number, q+1, right); <br>    } <br>} <br><br>void mergesort(int number1[], int M, int number2[], <br>                int N, int number3[]) { <br>    int i = 0, j = 0, k = 0; <br><br>    while(i &lt; M &amp;&amp; j &lt; N) { <br>        if(number1[i] &lt;= number2[j]) <br>            number3[k++] = number1[i++]; <br>        else <br>            number3[k++] = number2[j++]; <br>    } <br><br>    while(i &lt; M) <br>        number3[k++] = number1[i++]; <br>    while(j &lt; N) <br>        number3[k++] = number2[j++]; <br>} <br></pre>
+
+<br>
+
+<ul>
+  <li> Java
+  </li>
+</ul>
+
+<pre>public class MergeSort {<br>    public static int[] sort(int[] number1, <br>                             int[] number2) {<br>        int[] number3 = <br>                   new int[number1.length + number2.length];<br>        <br>        int i = 0, j = 0, k = 0; <br><br>        while(i &lt; number1.length &amp;&amp; j &lt; number2.length) { <br>            if(number1[i] &lt;= number2[j]) <br>                number3[k++] = number1[i++]; <br>            else <br>                number3[k++] = number2[j++]; <br>        } <br><br>        while(i &lt; number1.length) <br>            number3[k++] = number1[i++]; <br>        while(j &lt; number2.length) <br>            number3[k++] = number2[j++];<br>        <br>        return number3;<br>    }<br>}</pre>
+<br>
+<br>
+
+
+
+
+</body>
+</html>

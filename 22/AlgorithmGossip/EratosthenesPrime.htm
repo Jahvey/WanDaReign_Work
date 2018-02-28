@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="css/stdlayout.css" type="text/css">
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="css/print.css" type="text/css">
+
+
+
+  
+  
+  
+  <meta content="text/html; charset=gb2312" http-equiv="content-type">
+
+
+
+  
+  
+  
+  <title>Eratosthenes筛选求质数</title>
+</head>
+
+
+<body>
+
+
+
+<h3><a href="http://taobao.esmartweb.com/man.htm"># 面试时穿什么着装合适，这里找答案! #</a></h3>
+
+
+
+<h1><a href="AlgorithmGossip.htm">Algorithm Gossip:&nbsp;Eratosthenes筛选求质数</a></h1>
+
+
+
+<h2>说明</h2>
+除了自身之外，无法被其它整数整除的数称之为质数，要求质数很简单，但如何快速的求出质数则一直是程式设计人员与数学家努力的课题，在这边介绍一个著名的 Eratosthenes求质数方法。<br>
+<h2>解法</h2>
+首先知道这个问题可以使用回圈来求解，将一个指定的数除以所有小于它的数，若可以整除就不是质数，然而如何减少回圈的检查次数？如何求出小于N的所有质数？<br>
+<br>
+首先假设要检查的数是N好了，则事实上只要检查至N的开根号就可以了，道理很简单，假设A*B =
+N，如果A大于N的开根号，则事实上在小于A之前的检查就可以先检查到B这个数可以整除N。不过在程式中使用开根号会精确度的问题，所以可以使用
+i*i &lt;= N进行检查，且执行更快。<br>
+<br>
+再来假设有一个筛子存放1～N，例如：<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">2　3　4　5　6　7　8　9　10　11　12　13　14　15　16　17　18　19　20　21 ........ N</span><br>
+</div>
+<br>
+先将2的倍数筛去：<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">2　3　5　7　9　11　13　15　17　19　21 ........ N</span><br>
+</div>
+<br>
+再将3的倍数筛去：<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">2　3　5　7　11　13　17　19　........ N</span><br>
+</div>
+<br>
+再来将5的倍数筛去，再来将7的质数筛去，再来将11的倍数筛去........，如此进行到最后留下的数就都是质数，这就是Eratosthenes筛选方法（Eratosthenes Sieve Method）。<br>
+<br>
+检查的次数还可以再减少，事实上，只要检查6n+1与6n+5就可以了，也就是直接跳过2与3的倍数，使得程式中的if的检查动作可以减少。 <br>
+
+
+
+<h2> 实作</h2>
+
+<ul>
+  <li> C
+  </li>
+</ul>
+
+<pre>#include &lt;stdio.h&gt; <br>#include &lt;stdlib.h&gt; <br><br>#define N 1000 <br><br>int main(void) { <br>    int i, j; <br>    int prime[N+1]; <br><br>    for(i = 2; i &lt;= N; i++) <br>        prime[i] = 1; <br><br>    for(i = 2; i*i &lt;= N; i++) { // 这边可以改进 <br>        if(prime[i] == 1) { <br>            for(j = 2*i; j &lt;= N; j++) { <br>                if(j % i == 0) <br>                    prime[j] = 0; <br>            } <br>        } <br>    } <br><br>    for(i = 2; i &lt; N; i++) { <br>        if(prime[i] == 1) { <br>            printf("%4d ", i); <br>            if(i % 16 == 0) <br>                printf("\n"); <br>        } <br>    } <br><br>    printf("\n"); <br><br>    return 0; <br>} <br></pre>
+
+<br>
+
+<ul>
+  <li> Java
+  </li>
+</ul>
+
+<pre>import java.util.*;<br><br>public class Prime {    <br>    public static int[] findPrimes(final int max) { <br>        int[] prime = new int[max+1]; <br>        ArrayList list = new ArrayList();<br><br>        for(int i = 2; i &lt;= max; i++) <br>            prime[i] = 1; <br><br>        for(int i = 2; i*i &lt;= max; i++) { // 这边可以改进 <br>            if(prime[i] == 1) { <br>                for(int j = 2*i; j &lt;= max; j++) { <br>                    if(j % i == 0) <br>                        prime[j] = 0; <br>                } <br>            } <br>        } <br><br>        for(int i = 2; i &lt; max; i++) { <br>            if(prime[i] == 1) { <br>                list.add(new Integer(i)); <br>            } <br>        }<br>        <br>        int[] p = new int[list.size()];<br>        Object[] objs = list.toArray(); <br>        for(int i = 0; i &lt; p.length; i++) {<br>            p[i] = ((Integer) objs[i]).intValue();<br>        }<br>        <br>        return p;<br>    }<br>    <br>    public static void main(String[] args) {<br>        int[] prime = Prime.findPrimes(1000);<br>        <br>        for(int i = 0; i &lt; prime.length; i++) {<br>            System.out.print(prime[i] + " ");<br>        }<br>        <br>        System.out.println();<br>    }<br>}</pre>
+<br>
+<br>
+
+
+
+</body>
+</html>

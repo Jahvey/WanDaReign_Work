@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/stdlayout.css" type="text/css">
+
+
+
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/print.css" type="text/css">
+
+
+
+
+  
+  
+  
+  
+  <meta content="text/html; charset=gb2312" http-equiv="content-type">
+
+
+
+
+  
+  
+  
+  
+  <title>2(2N+1) 魔方阵</title>
+</head>
+
+
+<body>
+
+
+
+
+<h3><a href="http://taobao.esmartweb.com/man.htm"># 面试时穿什么着装合适，这里找答案! #</a></h3>
+
+
+
+
+<h1><a href="AlgorithmGossip.htm">Algorithm Gossip:&nbsp;2(2N+1) 魔方阵</a></h1>
+
+
+
+
+<h2>说明</h2>
+方阵的维度整体来看是偶数，但是其实是一个奇数乘以一个偶数，例如6X6，其中6=2X3，我们也称这种方阵与单偶数方阵。<br>
+<h2>解法</h2>
+如果您会解奇数魔术方阵，要解这种方阵也就不难理解，首先我们令n=2(2m+1)，并将整个方阵看作是数个奇数方阵的组合，如下所示： <br>
+
+<div style="text-align: center;"><img style="width: 393px; height: 236px;" alt="2(2N+1)魔方阵" title="2(2N+1)魔方阵" src="images/twoNOneArray-1.jpg"><br>
+</div>
+<br>
+首先依序将A、B、C、D四个位置，依奇数方阵的规则填入数字，填完之后，方阵中各行的和就相同了，但列与对角线则否，此时必须在A-D与C- B之间，作一些对应的调换，规则如下：<br>
+<ol>
+  <li>将A中每一列(中间列除外)的头m个元素，与D中对应位置的元素调换。</li>
+  <li>将A的中央列、中央那一格向左取m格，并与D中对应位置对调</li>
+  <li>将C中每一列的倒数m-1个元素，与B中对应的元素对调</li>
+</ol>
+<br>
+举个实例来说，如何填6X6方阵，我们首先将之分解为奇数方阵，并填入数字，如下所示： <br>
+<div style="text-align: center;"><img style="width: 202px; height: 258px;" alt="2(2N+1)魔方阵" title="2(2N+1)魔方阵" src="images/twoNOneArray-2.jpg"></div>
+<br>
+接下来进行互换的动作，互换的元素以不同颜色标示，如下：<br>
+<div style="text-align: center;"><img style="width: 194px; height: 192px;" alt="2(2N+1)魔方阵" title="2(2N+1)魔方阵" src="images/twoNOneArray-3.jpg"></div>
+<br>
+由于m-1的数为0，所以在这个例子中，C-B部份并不用进行对调。<br>
+<h2> 实作</h2>
+
+<ul>
+  <li> C
+  </li>
+</ul>
+
+<pre>#include &lt;stdio.h&gt; <br>#include &lt;stdlib.h&gt; <br><br>#define N 6 <br>#define SWAP(x,y) {int t; t = x; x = y; y = t;} <br><br>void magic_o(int [][N], int); <br>void exchange(int [][N], int); <br><br>int main(void) { <br>    int square[N][N] = {0}; <br>    int i, j; <br><br>    magic_o(square, N/2); <br>    exchange(square, N); <br><br>    for(i = 0; i &lt; N; i++) { <br>        for(j = 0; j &lt; N; j++) <br>            printf("%2d ", square[i][j]); <br>        printf("\n"); <br>    } <br><br>    return 0; <br>} <br><br>void magic_o(int square[][N], int n) { <br>    int count, row, column; <br><br>    row = 0; <br>    column = n / 2; <br><br>    for(count = 1; count &lt;= n*n; count++) { <br>        square[row][column] = count;            // 填A <br>        square[row+n][column+n] = count + n*n;  // 填B <br>        square[row][column+n] = count + 2*n*n;  // 填C <br>        square[row+n][column] = count + 3*n*n;  // 填D <br>        if(count % n == 0) <br>            row++; <br>        else { <br>            row = (row == 0) ? n - 1 : row - 1 ; <br>            column = (column == n-1) ? 0 : column + 1; <br>        } <br>    } <br>} <br><br>void exchange(int x[][N], int n) { <br>    int i, j; <br>    int m = n / 4; <br>    int m1 = m - 1; <br><br>    for(i = 0; i &lt; n/2; i++) { <br>        if(i != m)  {    <br>            for(j = 0; j &lt; m; j++)          // 处理规则 1 <br>                SWAP(x[i][j], x[n/2+i][j]); <br>            for(j = 0; j &lt; m1; j++)         // 处理规则 2 <br>                SWAP(x[i][n-1-j], x[n/2+i][n-1-j]); <br>        } <br>        else {  // 处理规则 3 <br>            for(j = 1; j &lt;= m; j++) <br>                SWAP(x[m][j], x[n/2+m][j]); <br>            for(j = 0; j &lt; m1; j++) <br>                SWAP(x[m][n-1-j], x[n/2+m][n-1-j]); <br>        } <br>    } <br>} <br></pre>
+
+<br>
+
+<ul>
+  <li> Java
+  </li>
+</ul>
+
+<pre>public class Matrix {<br>    public static int[][] magic22mp1(int n) {<br>        int[][] square = new int[n][n]; <br><br>        magic_o(square, n/2); <br>        exchange(square, n);         <br>        <br>        return square;<br>    }<br>    <br>    private static void magic_o(int[][] square, int n) {<br>        int row = 0; <br>        int column = n / 2; <br><br>        for(int count = 1; count &lt;= n*n; count++) { <br>            square[row][column] = count;            // 填A <br>            square[row+n][column+n] = count + n*n;  // 填B <br>            square[row][column+n] = count + 2*n*n;  // 填C <br>            square[row+n][column] = count + 3*n*n;  // 填D <br>            if(count % n == 0) <br>                row++; <br>            else { <br>                row = (row == 0) ? n - 1 : row - 1 ; <br>                column = (column == n-1) ? 0 : column + 1; <br>            } <br>        }<br>    }<br>    <br>    private static void exchange(int[][] x, int n) {<br>        int i, j; <br>        int m = n / 4; <br>        int m1 = m - 1; <br><br>        for(i = 0; i &lt; n/2; i++) { <br>            if(i != m)  {    <br>                for(j = 0; j &lt; m; j++)          // 处理规则 1 <br>                    swap(x, i, j, n/2+i, j); <br>                for(j = 0; j &lt; m1; j++)         // 处理规则 2 <br>                    swap(x, i, n-1-j, n/2+i, n-1-j); <br>            } <br>            else {  // 处理规则 3 <br>                for(j = 1; j &lt;= m; j++) <br>                    swap(x, m, j, n/2+m, j); <br>                for(j = 0; j &lt; m1; j++) <br>                    swap(x, m, n-1-j, n/2+m, n-1-j); <br>            } <br>        } <br>    }<br>    <br>    private static void swap(int[][] number,<br>                                int i, int j, int k, int l) {<br>        int t; <br>        t = number[i][j]; <br>        number[i][j] = number[k][l]; <br>        number[k][l] = t;<br>    }<br>    <br>    public static void main(String[] args) {<br>        int[][] magic = Matrix.magic22mp1(6);<br>        <br>        for(int k = 0; k &lt; magic.length; k++) {<br>            for(int l = 0; l &lt; magic[0].length; l++) {<br>                System.out.print(magic[k][l] + " ");<br>            }<br>            System.out.println();<br>         }<br>    }<br>} </pre>
+<br>
+<br>
+
+
+
+
+</body>
+</html>

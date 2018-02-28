@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/stdlayout.css" type="text/css">
+
+
+
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/print.css" type="text/css">
+
+
+
+
+  
+  
+  
+  
+  <meta content="text/html; charset=gb2312" http-equiv="content-type">
+
+
+
+
+  
+  
+  
+  
+  <title>伫列 - 使用链结实作（C语言动态记忆体宣告）</title>
+</head>
+
+
+<body>
+
+
+
+
+<h3><a href="http://caterpillar.onlyfun.net/GossipCN/index.html">From
+Gossip@caterpillar</a></h3>
+
+
+
+
+<h1><a href="AlgorithmGossip.htm">Algorithm Gossip:&nbsp;伫列 - 使用链结实作（C语言动态记忆体宣告）</a></h1>
+
+
+
+
+<h2>说明</h2>
+使用阵列来实作伫列，会有伫列空间的限制，如果使用链结配合动态记忆体宣告，就不会有长度的限制。<br>
+<h2>解法</h2>
+在使用链结实作伫列时，为了方便，使用一个空的节点来指向伫列前端第一个元素，这个空节点的data栏位并不储存资料，而next当作front的角色，如下图所示：<br>
+<div style="text-align: center;"><img style="width: 304px; height: 90px;" alt="Link" title="Link" src="images/queneByLink-1.jpg"><br>
+</div>
+<br>
+<br>
+为了配合以上的空节点，将伫列是否为空的判断方式，改为front-&gt;next是否指向下一个节点来完成，如果front-&gt;next指向NULL，表示链结中已无下一个资料，所以伫列为空。<br>
+<br>
+由于必须同时维护front与rear两个资讯，而C语言一次只能传回一个值，为了简化程式逻辑，我们将front与rear宣告为全域变数，有兴趣的话，请自己试着不设为全域变数来撰写，这会让程式变得复杂一些。 <br>
+
+<h2> 实作</h2>
+
+<ul>
+  <li> C </li>
+</ul>
+
+<pre>#include &lt;stdio.h&gt; <br>#include &lt;stdlib.h&gt; <br><br>struct node { <br>    int data; <br>    struct node *next; <br>}; <br><br>typedef struct node getnode; <br><br>void createq(); <br>void showfront(); <br>void addq(int); <br>void delq(); <br>void showqueue(); <br><br>getnode *front, *rear; <br><br>int main(void) { <br>    int input, select; <br><br>    createq(); <br><br>    while(1) { <br>        printf("\n\n请输入选项(-1结束)："); <br>        printf("\n(1)插入值至伫列"); <br>        printf("\n(2)显示伫列前端"); <br>        printf("\n(3)删除前端值"); <br>        printf("\n(4)显示所有内容"); <br>        printf("\n$c&gt;"); <br>        scanf("%d", &amp;select); <br>        <br>        if(select == -1) <br>            break; <br><br>        switch(select) { <br>            case 1: <br>                printf("\n输入值："); <br>                scanf("%d", &amp;input); <br>                addq(input); <br>                break; <br>            case 2: <br>                showfront(); <br>                break; <br>            case 3: <br>                delq(); <br>                break; <br>            case 4: <br>                showqueue(); <br>                break; <br>            default: <br>                printf("\n选项错误！"); <br>        } <br>    } <br><br>    printf("\n"); <br><br>    return 0; <br>} <br><br>void createq() { <br>    front = rear = (getnode*) malloc(sizeof(getnode)); <br>    front-&gt;next = rear-&gt;next = NULL; <br>} <br><br>void showfront(){ <br>    if(front-&gt;next == NULL) <br>        printf("\n伫列为空！"); <br>    else <br>        printf("\n顶端值：%d", front-&gt;next-&gt;data); <br>} <br><br>void addq(int data) { <br>    getnode *newnode; <br><br>    newnode = (getnode*) malloc(sizeof(getnode)); <br><br>    if(front-&gt;next == NULL)  <br>        front-&gt;next = newnode; <br>    <br>    newnode-&gt;data = data; <br>    newnode-&gt;next = NULL; <br>    rear-&gt;next = newnode; <br>    rear = newnode; <br>} <br><br>void delq() { <br>    getnode* tmpnode; <br><br>    if(front-&gt;next == NULL) { <br>        printf("\n伫列已空！"); <br>        return; <br>    } <br><br>    tmpnode = front-&gt;next; <br>    front-&gt;next = tmpnode-&gt;next; <br>    free(tmpnode);    <br>} <br><br>void showqueue() { <br>    getnode* tmpnode; <br><br>    tmpnode = front-&gt;next; <br><br>    printf("\n伫列内容："); <br>    while(tmpnode != NULL) { <br>        printf("%d ", tmpnode-&gt;data); <br>        tmpnode = tmpnode-&gt;next; <br>    } <br>} </pre>
+<br>
+
+
+
+
+</body>
+</html>

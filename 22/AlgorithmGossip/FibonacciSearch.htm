@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/stdlayout.css" type="text/css">
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/print.css" type="text/css">
+
+
+
+
+
+  
+  
+  
+  
+  
+  <meta content="text/html; charset=gb2312" http-equiv="content-type">
+
+
+
+
+
+  
+  
+  
+  
+  
+  <title>费氏搜寻法</title>
+</head>
+
+
+<body>
+
+
+
+
+<h3><a href="http://taobao.esmartweb.com/man.htm"># 面试时穿什么着装合适，这里找答案! #</a></h3>
+
+
+
+
+<h1><a href="AlgorithmGossip.htm">Algorithm Gossip:&nbsp;费氏搜寻法</a></h1>
+
+
+
+
+
+<h2>说明</h2>
+
+二分搜寻法每次搜寻时，都会将搜寻区间分为一半，所以其搜寻时间为O(log(2)n)，log(2)表示以2为底的log值，这边要介绍的费氏搜寻，其利用费氏数列作为间隔来搜寻下一个数，所以区间收敛的速度更快，搜寻时间为O(logn)。<br>
+
+<h2>解法</h2>
+
+费氏搜寻使用费氏数列来决定下一个数的搜寻位置，所以必须先制作费氏数列，这在之前有提过；费氏搜寻会先透过公式计算求出第一个要搜寻数的位置，以及其代
+表的费氏数，以搜寻对象10个数字来说，第一个费氏数经计算后一定是F5，而第一个要搜寻的位置有两个可能，例如若在下面的数列搜寻的话（为了计算方便，
+通常会将索引0订作无限小的数，而数列由索引1开始）：<br>
+
+<br>
+<span style="font-family: Courier New,Courier,monospace;">
+-&infin; 1 3 5 7 9 13 15 17 19 20</span><br>
+
+<br>
+
+如果要搜寻5的话，则由索引F5 = 5开始搜寻，接下来如果数列中的数小于指定搜寻值时，就往左找，大于时就向右，每次找的间隔是F4、F3、F2来寻找，当费氏数为0时还没找到，就表示寻找失败，如下所示： <br>
+
+
+<div style="text-align: center;"><img style="width: 232px; height: 123px;" alt="费式搜寻" title="费式搜寻" src="images/fibonacciSearch-1.jpg"><br>
+
+<br>
+
+<div style="text-align: left;">由于第一个搜寻值索引F5 = 5处的值小于19，所以此时必须对齐数列右方，也就是将第一个搜寻值的索引改为F5+2 = 7，然后如同上述的方式进行搜寻，如下所示：<br>
+
+</div>
+
+<div style="text-align: center;"><img style="width: 234px; height: 138px;" alt="费式搜寻" title="费式搜寻" src="images/fibonacciSearch-2.jpg"></div>
+
+<div style="text-align: left;">至于第一个搜寻值是如何找到的？我们可以由以下这个公式来求得，其中n为搜寻对象的个数：<br>
+
+<div style="margin-left: 40px;"><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">F</span><sub style="font-weight: bold; font-family: Courier New,Courier,monospace;">x</sub><span style="font-weight: bold; font-family: Courier New,Courier,monospace;"> + m = n </span><br style="font-weight: bold; font-family: Courier New,Courier,monospace;">
+
+<span style="font-weight: bold; font-family: Courier New,Courier,monospace;">F</span><sub style="font-weight: bold; font-family: Courier New,Courier,monospace;">x</sub><span style="font-weight: bold; font-family: Courier New,Courier,monospace;"> &lt;= n </span><br>
+
+</div>
+
+&nbsp;<br>
+
+<br>
+
+也就是说Fx必须找到不大于n的费氏数，以10个搜寻对象来说：<br>
+
+<div style="margin-left: 40px;"><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">F</span><sub style="font-weight: bold; font-family: Courier New,Courier,monospace;">x</sub><span style="font-weight: bold; font-family: Courier New,Courier,monospace;"> + m = 10 </span><br>
+
+</div>
+
+&nbsp;<br>
+
+<br>
+
+取F<sub>x</sub> = 8, m = 2，所以我们可以对照费氏数列得x = 6，然而第一个数的可能位置之一并不是F6，而是第x-1的费氏数，也就是F<sub>5</sub> = 5。<br>
+
+<br>
+
+如果数列number在索引5处的值小于指定的搜寻值，则第一个搜寻位置就是索引5的位置，如果大于指定的搜寻值，则第一个搜寻位置必须加上m，也就是F<sub>5</sub> + m = 5 + 2 = 7，也就是索引7的位置，其实加上m的原因，是为了要让下一个搜寻值刚好是数列的最后一个位置。<br>
+
+<br>
+
+费氏搜寻看来难懂，但只要掌握F<sub>x</sub> + m = n这个公式，自己找几个实例算一次，很容易就可以理解；费氏搜寻除了收敛快速之外，由于其本身只会使用到加法与减法，在运算上也可以加快。 <br>
+
+</div>
+
+<br>
+
+<div style="text-align: left;">
+<h2> 实作</h2>
+
+
+<ul>
+
+  <li> C
+  </li>
+
+</ul>
+
+
+<pre>#include &lt;stdio.h&gt; <br>#include &lt;stdlib.h&gt; <br>#include &lt;time.h&gt; <br>#define MAX 15 <br>#define SWAP(x,y) {int t; t = x; x = y; y = t;} <br><br>void createfib(void);     // 建立费氏数列 <br>int findx(int, int);          // 找x值 <br>int fibsearch(int[], int);  // 费氏搜寻 <br>void quicksort(int[], int, int);  // 快速排序 <br><br>int Fib[MAX] = {-999}; <br><br>int main(void) { <br>    int number[MAX] = {0}; <br>    int i, find; <br><br>    srand(time(NULL)); <br><br>    for(i = 1; i &lt;= MAX; i++) { <br>        number[i] = rand() % 100; <br>    } <br><br>    quicksort(number, 1, MAX); <br><br>    printf("数列："); <br>    for(i = 1; i &lt;= MAX; i++) <br>        printf("%d ", number[i]); <br><br>    printf("\n输入寻找对象："); <br>    scanf("%d", &amp;find); <br><br>    if((i = fibsearch(number, find)) &gt;= 0) <br>        printf("找到数字于索引 %d ", i); <br>    else <br>        printf("\n找不到指定数"); <br>    <br>    printf("\n"); <br><br>    return 0; <br>} <br><br>// 建立费氏数列 <br>void createfib(void) { <br>    int i; <br><br>    Fib[0] = 0; <br>    Fib[1] = 1; <br><br>    for(i = 2; i &lt; MAX; i++) <br>        Fib[i] = Fib[i-1] + Fib[i-2]; <br>} <br><br>// 找 x 值 <br>int findx(int n, int find) { <br>    int i = 0; <br><br>    while(Fib[i] &lt;= n) <br>        i++; <br><br>    i--; <br>    return i; <br>} <br><br>// 费式搜寻 <br>int fibsearch(int number[], int find) { <br>    int i, x, m; <br><br>    createfib(); <br><br>    x  = findx(MAX+1,find); <br>    m = MAX - Fib[x]; <br>    printf("\nx = %d, m = %d, Fib[x] = %d\n\n", <br>                                     x, m, Fib[x]); <br><br>    x--; <br>    i = x; <br><br>    if(number[i] &lt; find) <br>        i += m; <br><br>    while(Fib[x] &gt; 0) { <br>        if(number[i] &lt; find) <br>            i += Fib[--x]; <br>        else if(number[i] &gt; find) <br>            i -= Fib[--x]; <br>        else <br>            return i; <br>    } <br>    return -1; <br>} <br><br>void quicksort(int number[], int left, int right) { <br>    int i, j, k, s; <br><br>    if(left &lt; right) { <br>        s = number[(left+right)/2]; <br>        i = left - 1; <br>        j = right + 1; <br><br>        while(1) { <br>            while(number[++i] &lt; s) ;  // 向右找 <br>            while(number[--j] &gt; s) ;  // 向左找 <br>            if(i &gt;= j) <br>                break; <br>            SWAP(number[i], number[j]); <br>        } <br><br>        quicksort(number, left, i-1);   // 对左边进行递回 <br>        quicksort(number, j+1, right);  // 对右边进行递回 <br>    } <br>} <br></pre>
+
+
+<br>
+
+
+<ul>
+
+  <li> Java
+  </li>
+
+</ul>
+
+
+<pre>public class FibonacciSearch {<br>    public static int search(int[] number, int des) { <br>        int[] fib = createFibonacci(number.length); <br><br>        int x  = findX(fib, number.length+1, des); <br>        int m = number.length - fib[x]; <br>        x--; <br>        int i = x; <br><br>        if(number[i] &lt; des) <br>            i += m; <br><br>        while(fib[x] &gt; 0) { <br>            if(number[i] &lt; des) <br>                i += fib[--x]; <br>            else if(number[i] &gt; des) <br>                i -= fib[--x]; <br>            else <br>                return i; <br>        } <br>        <br>        return -1; <br><br>    }<br>    <br>    private static int[] createFibonacci(int max) {<br>        int[] fib = new int[max];<br>        for(int i = 0; i &lt; fib.length; i++) {<br>            fib[i] = Integer.MIN_VALUE;   <br>        }<br><br>        fib[0] = 0; <br>        fib[1] = 1; <br><br>        for(int i = 2; i &lt; max; i++) <br>            fib[i] = fib[i-1] + fib[i-2];<br>        <br>        return fib;<br>    }<br>    <br>    private static int findX(int[] fib, int n, int des) {<br>        int i = 0; <br><br>        while(fib[i] &lt;= n) <br>            i++; <br><br>        i--; <br>        <br>        return i;     <br>    }<br>    <br>    public static void main(String[] args) {<br>        int[] number = {1, 4, 2, 6, 7, 3, 9, 8};<br>        <br>        QuickSort.sort(number);<br>        <br>        int find = Fibonacci.search(number, 3);<br>        <br>        if(find != -1) <br>            System.out.println("找到数值于索引" + find); <br>        else <br>            System.out.println("找不到数值"); <br>    }<br>}</pre>
+
+<br>
+
+<br>
+
+</div>
+
+</div>
+
+
+
+
+
+</body>
+</html>

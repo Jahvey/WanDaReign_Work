@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/stdlayout.css" type="text/css">
+
+
+
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/print.css" type="text/css">
+
+
+
+
+  
+  
+  
+  
+  <meta content="text/html; charset=gb2312" http-equiv="content-type">
+
+
+
+
+  
+  
+  
+  
+  <title>快速排序法（三）</title>
+</head>
+
+
+<body>
+
+
+
+
+<h3><a href="http://taobao.esmartweb.com/man.htm"># 面试时穿什么着装合适，这里找答案! #</a></h3>
+
+
+
+
+<h1><a href="AlgorithmGossip.htm">Algorithm Gossip:&nbsp;快速排序法（三）</a></h1>
+
+
+
+
+<h2>说明</h2>
+之前说过轴的选择是快速排序法的效率关键之一，在这边的快速排序法的轴选择方式更加快了快速排序法的效率，它是来自演算法名书 Introduction to Algorithms 之中。<br>
+<h2>解法</h2>
+先说明这个快速排序法的概念，它以最右边的值s作比较的标准，将整个数列分为三个部份，一个是小于s的部份，一个是大于s的部份，一个是未处理的部份，如下所示 ： <br>
+
+<div style="text-align: center;"><img style="width: 283px; height: 68px;" alt="快速排序" title="快速排序" src="images/quickSort3-1.jpg"></div>
+<br>
+在排序的过程中，i 与 j 都会不断的往右进行比较与交换，最后数列会变为以下的状态： <br>
+<div style="text-align: center;"><img style="width: 285px; height: 69px;" alt="快速排序" title="快速排序" src="images/quickSort3-2.jpg"></div>
+<br>
+然后将s的值置于中间，接下来就以相同的步骤会左右两边的数列进行排序的动作，如下所示： <br>
+<div style="text-align: center;"><img style="width: 283px; height: 58px;" alt="快速排序" title="快速排序" src="images/quickSort3-3.jpg"></div>
+<br>
+
+整个演算的过程，直接摘录书中的虚拟码来作说明： <br>
+
+<pre>QUICKSORT(A, p, r) <br>    if p &lt; r <br>        then q &lt;- PARTITION(A, p, r) <br>                 QUICKSORT(A, p, q-1) <br>                 QUICKSORT(A, q+1, r) <br>end QUICKSORT <br><br>PARTITION(A, p, r) <br>    x &lt;- A[r] <br>    i &lt;- p-1 <br>    for j &lt;- p to r-1 <br>        do if A[j] &lt;= x <br>                 then  i &lt;- i+1 <br>                         exchange A[i]&lt;-&gt;A[j] <br>    exchange A[i+1]&lt;-&gt;A[r] <br>    return i+1 <br>end PARTITION  <br></pre>
+
+<br>
+一个实际例子的演算如下所示：<br>
+<div style="text-align: center;"><img style="width: 493px; height: 241px;" alt="快速排序" title="快速排序" src="images/quickSort3-4.jpg"></div>
+<br>
+<br>
+<h2> 实作</h2>
+
+<ul>
+  <li> C
+  </li>
+</ul>
+
+<pre>#include &lt;stdio.h&gt; <br>#include &lt;stdlib.h&gt; <br>#include &lt;time.h&gt; <br>#define MAX 10 <br>#define SWAP(x,y) {int t; t = x; x = y; y = t;} <br><br>int partition(int[], int, int); <br>void quicksort(int[], int, int); <br><br>int main(void) { <br>    int number[MAX] = {0}; <br>    int i, num;  <br><br>    srand(time(NULL)); <br><br>    printf("排序前："); <br>    for(i = 0; i &lt; MAX; i++) { <br>        number[i] = rand() % 100; <br>        printf("%d ", number[i]); <br>    } <br><br>    quicksort(number, 0, MAX-1); <br><br>    printf("\n排序后："); <br>    for(i = 0; i &lt; MAX; i++) <br>        printf("%d ", number[i]); <br>    <br>    printf("\n"); <br><br>    return 0; <br>} <br><br>int partition(int number[], int left, int right) { <br>    int i, j, s; <br><br>    s = number[right]; <br>    i = left - 1; <br><br>    for(j = left; j &lt; right; j++) { <br>        if(number[j] &lt;= s) { <br>            i++; <br>            SWAP(number[i], number[j]); <br>        } <br>    } <br><br>    SWAP(number[i+1], number[right]); <br>    return i+1; <br>} <br><br>void quicksort(int number[], int left, int right) { <br>    int q; <br><br>    if(left &lt; right) { <br>        q = partition(number, left, right); <br>        quicksort(number, left, q-1); <br>        quicksort(number, q+1, right); <br>    } <br>} <br></pre>
+
+<br>
+
+<ul>
+  <li> Java
+  </li>
+</ul>
+
+<pre>public class QuickSort {<br>    public static void sort(int[] number) {<br>        sort(number, 0, number.length-1);<br>    }<br>    <br>    private static void sort(int[] number, <br>                             int left, int right) {<br>        if(left &lt; right) { <br>            int q = partition(number, left, right); <br>            sort(number, left, q-1); <br>            sort(number, q+1, right); <br>        } <br><br>    }<br><br>    private static int partition(int number[], <br>                                 int left, int right) {  <br><br>        int s = number[right]; <br>        int i = left - 1; <br><br>        for(int j = left; j &lt; right; j++) { <br>            if(number[j] &lt;= s) { <br>                i++; <br>                swap(number, i, j); <br>            } <br>        } <br><br>        swap(number, i+1, right); <br>        <br>        return i+1; <br>    } <br><br>    private static void swap(int[] number, int i, int j) {<br>        int t; <br>        t = number[i]; <br>        number[i] = number[j]; <br>        number[j] = t;<br>    }<br>}</pre>
+<br>
+<br>
+<br>
+
+
+
+
+</body>
+</html>

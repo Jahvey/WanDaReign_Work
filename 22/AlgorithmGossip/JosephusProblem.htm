@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/stdlayout.css" type="text/css">
+
+
+
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="css/print.css" type="text/css">
+
+
+
+
+  
+  
+  
+  
+  <meta content="text/html; charset=gb2312" http-equiv="content-type">
+
+
+
+
+  
+  
+  
+  
+  <title>约瑟夫问题（Josephus Problem）</title>
+</head>
+
+
+<body>
+
+
+
+
+<h3><a href="http://caterpillar.onlyfun.net/GossipCN/index.html">From
+Gossip@caterpillar</a></h3>
+
+
+
+
+<h1><a href="AlgorithmGossip.htm">Algorithm Gossip: 约瑟夫问题（Josephus Problem）</a></h1>
+
+
+
+
+<h2>说明</h2>
+据说著名犹太历史学家 Josephus有过以下的故事：在罗马人占领乔塔帕特后，39
+个犹太人与Josephus及他的朋友躲到一个洞中，39个犹太人决定宁愿死也不要被敌人到，于是决定了一个自杀方式，41个人排成一个圆圈，由第1个人
+开始报数，每报数到第3人该人就必须自杀，然后再由下一个重新报数，直到所有人都自杀身亡为止。<br>
+<br>
+然而Josephus 和他的朋友并不想遵从，Josephus要他的朋友先假装遵从，他将朋友与自己安排在第16个与第31个位置，于是逃过了这场死亡游戏。<br>
+<h2>解法</h2>
+约瑟夫问题可用代数分析来求解，将这个问题扩大好了，假设现在您与m个朋友不幸参与了这个游戏，您要如何保护您与您的朋友？只要画两个圆圈就可以让自己与朋友免于死亡游戏，这两个圆圈内圈是排列顺序，而外圈是自杀顺序，如下图所示： <br>
+
+<div style="text-align: center;"><img style="width: 327px; height: 347px;" alt="约瑟夫问题" title="约瑟夫问题" src="images/josephusProblem-1.jpg"></div>
+使用程式来求解的话，只要将阵列当作环状来处理就可以了，在阵列中由计数1开始，每找到三个无资料区就填入一个计数，直而计数达41为止，然后将阵列由索引1开始列出，就可以得知每个位置的自杀顺序，这就是约瑟夫排列，41个人而报数3的约琴夫排列如下所示：<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">14 36 1 38 15 2 24 30 3 16 34 4 25 17 5 40 31 6 18 26 7 37 19 8 35 27 9 20 32 10 41 21 11 28 39 12 22 33 13 29 23</span><br>
+</div>
+<br>
+由上可知，最后一个自杀的是在第31个位置，而倒数第二个自杀的要排在第16个位置，之前的人都死光了，所以他们也就不知道约琴夫与他的朋友并没有遵守游戏规则了。 <br>
+<h2> 实作</h2>
+
+<ul>
+  <li> C </li>
+</ul>
+
+<pre>#include &lt;stdio.h&gt; <br>#include &lt;stdlib.h&gt; <br>#define N 41 <br>#define M 3 <br><br>int main(void) { <br>    int man[N] = {0}; <br>    int count = 1; <br>    int i = 0, pos = -1; <br>    int alive = 0; <br><br>    while(count &lt;= N) { <br>        do { <br>            pos = (pos+1) % N;  // 环状处理 <br>            if(man[pos] == 0) <br>                i++; <br><br>            if(i == M) {  // 报数为3了 <br>                i = 0; <br>                break; <br>            } <br>        } while(1); <br><br>        man[pos] = count; <br>        count++; <br>    } <br><br>    printf("\n约琴夫排列："); <br>    for(i = 0; i &lt; N; i++) <br>        printf("%d ", man[i]); <br><br>    printf("\n\n您想要救多少人？"); <br>    scanf("%d", &amp;alive); <br><br>    printf("\nL表示这%d人要放的位置：\n", alive); <br>    for(i = 0; i &lt; N; i++) { <br>        if(man[i] &gt; alive) <br>            printf("D"); <br>        else <br>            printf("L"); <br><br>        if((i+1) % 5 == 0) <br>            printf("  "); <br>    } <br>    printf("\n"); <br><br>    return 0; <br>} <br></pre>
+
+<br>
+
+<ul>
+  <li> Java </li>
+</ul>
+
+<pre>public class Josephus {<br>    public static int[] arrayOfJosephus(<br>                               int number, int per) {<br>        int[] man = new int[number]; <br><br>        for(int count = 1, i = 0, pos = -1; <br>                count &lt;= number; count++) { <br>            do { <br>                pos = (pos+1) % number;  // 环状处理 <br>                if(man[pos] == 0) <br>                    i++; <br><br>                if(i == per) {  // 报数为3了 <br>                    i = 0; <br>                    break; <br>                } <br>            } while(true); <br><br>            man[pos] = count; <br>        } <br>        <br>        return man;<br>    }<br><br>    public static void main(String[] args) {<br>        int[] man = Josephus.arrayOfJosephus(41, 3);<br>        int alive = 3;<br>        <br>        System.out.println("约琴夫排列："); <br>        for(int i = 0; i &lt; 41; i++) <br>            System.out.print(man[i] + " "); <br><br><br>        System.out.println("\nL表示3个存活的人要放的位置："); <br>        for(int i = 0; i &lt; 41; i++) { <br>            if(man[i] &gt; alive) <br>                System.out.print("D"); <br>            else <br>                System.out.print("L"); <br><br>            if((i+1) % 5 == 0) <br>                System.out.print("  "); <br>        } <br><br>        System.out.println();<br>    }<br>}</pre>
+<br>
+<br>
+
+
+
+
+</body>
+</html>
